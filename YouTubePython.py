@@ -7,7 +7,7 @@ import os
 
 # Set up OAuth 2.0 credentials
 SCOPES = ['https://www.googleapis.com/auth/youtube.readonly','https://www.googleapis.com/auth/yt-analytics.readonly']
-CLIENT_SECRETS_FILE = ''  # Path to the client secret file, replace with path to yours
+CLIENT_SECRETS_FILE = 'secret.json'  # Place secret in same folder as script and declare it here
 
 def get_authenticated_service(api_name, api_version, scopes):
     creds = None
@@ -25,6 +25,9 @@ def get_authenticated_service(api_name, api_version, scopes):
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
     return build(api_name, api_version, credentials=creds)
+
+def get_script_directory():
+    return os.path.dirname(os.path.realpath(__file__))
 
 def get_authenticated_analytics_service():
     return get_authenticated_service('youtubeAnalytics', 'v2', SCOPES)
@@ -55,6 +58,7 @@ def get_video_title(youtube_data, video_id):
     return video_response['items'][0]['snippet']['title']
 
 def get_video_ids(youtube_data):
+    amount = 10 # You may need to paginate if there are more than 50 videos
     playlist_request = youtube_data.channels().list(
         part='contentDetails',
         mine=True,
@@ -65,9 +69,9 @@ def get_video_ids(youtube_data):
     videos_request = youtube_data.playlistItems().list(
         part='contentDetails',
         playlistId=playlist_id,
-        maxResults=50 # You may need to paginate if there are more than 50 videos
+        maxResults=amount
     )
-
+    print("Getting info for ", amount, " videos")
     videos_response = videos_request.execute()
 
     # Create a list to store video IDs
@@ -83,8 +87,46 @@ def get_channel_analytics(youtube_analytics):
         dimensions='ageGroup,gender'
     )
     response = request.execute()
-    # Now you can access the data in the 'response' variable
     return response
+
+
+
+# Save video demographic info to a JSON file
+def save_channel_demographics_to_json(channel_analytics_data):
+    channelData = {
+        "ChannelDemographics": channel_analytics_data["rows"]
+    }
+
+    # Construct the file path for saving video information JSON
+    script_dir = get_script_directory()
+    channel_info_file_path = os.path.join(script_dir, 'channel_demographics.json')
+        # Save simplified channel demographics data to JSON
+    with open(channel_info_file_path, 'w') as json_file:
+        json.dump(channelData, json_file, indent=4)
+
+
+# Save video demographic info to a JSON file
+def save_video_demographics_to_json(youtube_data, youtube_analytics):
+    video_ids = get_video_ids(youtube_data)
+    video_info = {}
+    for video_id in video_ids:
+        print("Getting info for: ", video_id)
+        video_title = get_video_title(youtube_data, video_id)
+        video_demographic_info = get_age_gender_analytics(youtube_analytics, video_id)
+        simplified_video_info = {
+            "title": video_title,
+            "video demographics": video_demographic_info["rows"]
+        }
+        video_info[video_id] = simplified_video_info
+
+    # Construct the file path for saving video information JSON
+    script_dir = get_script_directory()
+    video_info_file_path = os.path.join(script_dir, 'video_info.json')
+
+    # Save video information to JSON
+    with open(video_info_file_path, 'w') as json_file:
+        json.dump(video_info , json_file, indent=4)
+
 
 # Main function
 def main():
@@ -92,50 +134,12 @@ def main():
     youtube_data = get_authenticated_data_service()
 
     channel_analytics_data = get_channel_analytics(youtube_analytics)
-    print("Here comes channel analytics: ")
-    for header in channel_analytics_data['columnHeaders']:
-        print(header['name'].capitalize(), end='\t')
-    print()
+    # Save channel analytics data to JSON
+    save_channel_demographics_to_json(channel_analytics_data)
+    save_video_demographics_to_json(youtube_data, youtube_analytics)
 
-# Print analytics data
-    for row in channel_analytics_data['rows']:
-        for i, value in enumerate(row):
-            print(value, end='\t\t') if i != len(row) - 1 else print(value)
-    print("----------------")
-
-    # Commented out code is for looping through all videos, since I don't have much data I'll just use get data for one video
-    # video_ids = get_video_ids(youtube_data)
-    
-    # loop through all
-    # for video_id in video_ids:
-
-    # # Get video title
-    #     title = get_video_title(youtube_data, video_id)
-    #     print("Video Title:", title)
-    
-    #     # Get age and gender analytics
-    #     analytics = get_age_gender_analytics(youtube_analytics, video_id)
-    #     print("Analytics Data:")
-    #     print(json.dumps(analytics, indent=4))
-
-
-
-    #Print all video IDs
-    print("Here comes list of all video IDs: ")
-    print(get_video_ids(youtube_data))
-    print("----------------")
-    
-
-    # Get data from one video
-    video_id = '' # Replace with ID for video you want data from or uncomment earlier code to go through all video IDs without having to specify
-    # Get video title
-    title = get_video_title(youtube_data, video_id)
-    print("Video Title:", title)
-    
-    # Get age and gender analytics
-    analytics = get_age_gender_analytics(youtube_analytics, video_id)
-    print("Video analytics Data:")
-    print(json.dumps(analytics, indent=4))
+        
+    print("Reached end")
 
 if __name__ == '__main__':
     main()
