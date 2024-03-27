@@ -1,3 +1,7 @@
 
 token.json
 secret.json
+YoutubeHandler/target/classes/client_secrets.json
+YoutubeHandler/target/classes/tokens/StoredCredential
+YoutubeHandler/src/main/resources/tokens/StoredCredential
+YoutubeHandler/src/main/resources/client_secrets.json
