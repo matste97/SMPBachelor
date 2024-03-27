@@ -1,6 +1,5 @@
 package org.example;
 
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtubeAnalytics.v2.YouTubeAnalytics;
@@ -13,12 +12,19 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.YoutubeAuth.getService;
-
 public class YoutubeAnalyticsFetcher {
-    public void fetchChannelGenderAgeDemographic() throws GeneralSecurityException, IOException, GoogleJsonResponseException {
-        YouTubeAnalytics youtubeAnalyticsService = getService();
-        // Define and execute the API request
+
+
+    private final YouTubeAnalytics youtubeAnalyticsService;
+    private final YouTube youtubeService;
+
+    public YoutubeAnalyticsFetcher() throws GeneralSecurityException, IOException {
+        YoutubeAuth youtubeAuth = new YoutubeAuth();
+        this.youtubeAnalyticsService = youtubeAuth.getService();
+        this.youtubeService = youtubeAuth.getYouTubeService();
+    }
+
+    public void fetchChannelGenderAgeDemographic() throws IOException {
         YouTubeAnalytics.Reports.Query request = youtubeAnalyticsService.reports()
                 .query();
         QueryResponse response = request.setDimensions("channel")
@@ -40,8 +46,8 @@ public class YoutubeAnalyticsFetcher {
         }
     }
 
-    public static List<String> getAllVideoIds() throws GeneralSecurityException, IOException {
-        YouTube youtubeService = YoutubeAuth.getYouTubeService();
+    public List<String> getAllVideoIds() throws IOException {
+
         List<String> videoIds = new ArrayList<>();
 
         String nextPageToken = "";
