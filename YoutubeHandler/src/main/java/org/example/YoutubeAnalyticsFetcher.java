@@ -1,10 +1,10 @@
 package org.example;
 
+import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtubeAnalytics.v2.YouTubeAnalytics;
 import com.google.api.services.youtubeAnalytics.v2.model.QueryResponse;
-import com.google.api.services.youtube.YouTube;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -70,6 +70,54 @@ public class YoutubeAnalyticsFetcher {
         }
 
         return videoIds;
+    }
+
+    public List<String> getLatestVideoIds() throws IOException {
+
+        List<String> videoIds = new ArrayList<>();
+
+        YouTube.Search.List request = youtubeService.search()
+                .list("snippet")
+                .setForMine(true)
+                .setMaxResults(10L)
+                .setType("video")
+                .setOrder("date");
+
+        SearchListResponse response = request.execute();
+        List<SearchResult> items = response.getItems();
+
+        for (SearchResult item : items) {
+            videoIds.add(item.getId().getVideoId());
+        }
+
+        return videoIds;
+    }
+
+    public void getVideoAgeAndGenderData(String videoId) throws IOException {
+        YouTubeAnalytics.Reports.Query request = youtubeAnalyticsService.reports()
+                .query();
+        QueryResponse response = request.setDimensions("channel")
+                .setIds("channel==MINE")
+                .setStartDate("2012-05-09")
+                .setEndDate("2023-05-09")
+                .setMetrics("viewerPercentage")
+                .setDimensions("ageGroup,gender")
+                .setFilters("video==" + videoId)
+                .execute();
+
+        System.out.print(response);
+
+        }
+
+    public String getVideoTitle(String videoId) throws IOException {
+        return youtubeService.videos()
+                .list("snippet")
+                .setId(videoId)
+                .execute()
+                .getItems()
+                .get(0)
+                .getSnippet()
+                .getTitle();
     }
 
 }
