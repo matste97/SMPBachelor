@@ -1,9 +1,13 @@
+<!-- THIS DOCUMENT IS JUST FOR TESTING TO SHOW WHAT IT COULD LOOK LIKE
+
+    CODE IS WIP AND MIGHT BE MESSY SINCE IT'S NOT FINAL -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Viewer Distribution Chart</title>
+  <title>Viewer Distribution Charts</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body, html {
@@ -12,93 +16,209 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      display: flex;
+      flex-direction: column;
     }
 
     #container {
-      width: 500px;
-      text-align: center;
-    }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.chart-container {
+  margin-bottom: 20px;
+  
+}
+
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.chart-title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.views-text {
+  font-size: 12px;
+  text-align: center;
+}
+
   </style>
 </head>
 <body>
-  <div id="container">
-    <canvas id="viewerChart" width="400" height="400"></canvas>
-    <div id="datetimeInfo"></div>
-  </div>
+    <div id="container">
+        <div class="chart-container">
+          <div class="title-container">
+            <div class="chart-title-big-bold"></div>
+            <div class="views-text"></span>
+          </div>
+        </div>
+      </div>
 
   <script>
     // Your JSON data
     var jsonData = {
-      "DateTimeGathered": "2024-03-28 14:23:36",
-      "channelDemographic": [
-  {
-    "gender": "male",
-    "ageGroup": "age13-17",
-    "viewerPercentage": 20
-  },
-  {
-    "gender": "male",
-    "ageGroup": "age18-24",
-    "viewerPercentage": 30
-  },
-  {
-    "gender": "male",
-    "ageGroup": "age25-34",
-    "viewerPercentage": 25
-  },
-  {
-    "gender": "female",
-    "ageGroup": "age13-17",
-    "viewerPercentage": 15
-  },
-  {
-    "gender": "female",
-    "ageGroup": "age18-24",
-    "viewerPercentage": 5
-  },
-  {
-    "gender": "female",
-    "ageGroup": "age25-34",
-    "viewerPercentage": 5
-  }
-]
-
+      "1": {
+        "videoDemographic": [
+          {
+            "gender": "male",
+            "ageGroup": "age13-17",
+            "viewerPercentage": 29
+          },
+          {
+            "gender": "male",
+            "ageGroup": "age18-24",
+            "viewerPercentage": 17
+          },
+          {
+            "gender": "male",
+            "ageGroup": "age25-34",
+            "viewerPercentage": 5
+          },
+          {
+            "gender": "female",
+            "ageGroup": "age13-17",
+            "viewerPercentage": 12
+          },
+          {
+            "gender": "female",
+            "ageGroup": "age18-24",
+            "viewerPercentage": 18
+          },
+          {
+            "gender": "female",
+            "ageGroup": "age25-34",
+            "viewerPercentage": 19
+          }
+        ],
+        "totalVideoViews": 300,
+        "videoId": "pJSAVo3EFa4",
+        "videoTitle": "My Broadcast 1"
+      },
+      "2": {
+        "videoDemographic": [
+          {
+            "gender": "male",
+            "ageGroup": "age13-17",
+            "viewerPercentage": 10
+          },
+          {
+            "gender": "male",
+            "ageGroup": "age18-24",
+            "viewerPercentage": 23
+          },
+          {
+            "gender": "male",
+            "ageGroup": "age25-34",
+            "viewerPercentage": 20
+          },
+          {
+            "gender": "female",
+            "ageGroup": "age13-17",
+            "viewerPercentage": 7
+          },
+          {
+            "gender": "female",
+            "ageGroup": "age18-24",
+            "viewerPercentage": 17
+          },
+          {
+            "gender": "female",
+            "ageGroup": "age25-34",
+            "viewerPercentage": 23
+          }
+        ],
+        "totalVideoViews": 500,
+        "videoId": "S8mrj3o85Yk",
+        "videoTitle": "My Broadcast 2"
+      },
+      "DateTimeGathered": "2024-03-28 14:23:36"
     };
 
-    // Process the JSON data into Chart.js compatible format
+    // Container to hold all charts
+    var container = document.getElementById('container');
+    var titleAndViewsContainer = document.getElementById('title-views-container');
+
+    // Loop through each video object and create a chart
+    for (var key in jsonData) {
+  if (key !== "DateTimeGathered") {
+    var videoData = jsonData[key];
+    var individualChartContainer = document.createElement('div');
+    individualChartContainer.className = 'container';
+
+    // Create container for title and views
+    var titleAndViewsContainer = document.createElement('div');
+    titleAndViewsContainer.className = 'title-views-container';
+    individualChartContainer.appendChild(titleAndViewsContainer);
+
+    // Video Title
+    var chartTitle = document.createElement('div');
+    chartTitle.className = 'chart-title';
+    chartTitle.textContent = videoData.videoTitle;
+    titleAndViewsContainer.appendChild(chartTitle);
+
+    // Total Views
+    var totalViewsDiv = document.createElement('div');
+    totalViewsDiv.className = "views-text";
+    totalViewsDiv.textContent = 'Total Views: ' + videoData.totalVideoViews;
+    titleAndViewsContainer.appendChild(totalViewsDiv);
+
+    var canvas = document.createElement('canvas');
+    canvas.width = 250;
+    canvas.height = 250;
+    canvas.id = 'viewerChart_' + key;
+    individualChartContainer.appendChild(canvas);
+    container.appendChild(individualChartContainer);
+
+
+    // Process the video demographic data into Chart.js compatible format
     var labels = [];
     var data = [];
     var backgroundColors = [];
+        var index = 1;
+        videoData.videoDemographic.forEach(function(item) {
+          labels.push(item.ageGroup + " " + item.gender);
+          data.push(item.viewerPercentage);
+          // Generate colors based on the viewer percentage
+          backgroundColors.push(selectColor(index));
+          index++;
+        });
 
-    jsonData.channelDemographic.forEach(function(item, index) {
-      labels.push(item.ageGroup + " " + item.gender);
-      data.push(item.viewerPercentage);
-      // Generate colors based on the viewer percentage
-      backgroundColors.push(selectColor(index));
-    });
-
-    // Create the chart
-    var ctx = document.getElementById('viewerChart').getContext('2d');
-    var viewerChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Viewer Distribution %',
-          data: data,
-          backgroundColor: backgroundColors,
-          borderColor: backgroundColors, // Use the same color for border
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
+        // Create the chart
+        var ctx = canvas.getContext('2d');
+        var viewerChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Viewer Distribution %',
+              data: data,
+              backgroundColor: backgroundColors,
+              borderColor: backgroundColors, // Use the same color for border
+              borderWidth: 1
+            }]
+          },
+          options: {
+    scales: {
+      y: {
+        beginAtZero: true
       }
-    });
+    },
+    plugins: {
+      legend: {
+        display: false // Hide the legend
+      }
+    }
+  }
+        });
+      }
+    }
 
     // Function to generate a color based on the number
     function selectColor(number) {
@@ -106,9 +226,11 @@
       return `hsl(${hue},50%,75%)`;
     }
 
-    // Display datetimegathered information
-    var datetimeInfo = document.getElementById('datetimeInfo');
-    datetimeInfo.innerHTML = "Data gathered at: " + jsonData.DateTimeGathered;
+// Display datetimegathered information below the charts
+var datetimeInfo = document.createElement('div');
+datetimeInfo.innerHTML = "Data gathered at: " + jsonData.DateTimeGathered;
+document.body.appendChild(datetimeInfo);
+
 
   </script>
 </body>
