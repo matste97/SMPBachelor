@@ -1,10 +1,11 @@
 package org.example;
-
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtubeAnalytics.v2.YouTubeAnalytics;
 import com.google.api.services.youtubeAnalytics.v2.model.QueryResponse;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -24,7 +25,10 @@ public class YoutubeAnalyticsFetcher {
         this.youtubeService = youtubeAuth.getYouTubeService();
     }
 
-    public void fetchChannelGenderAgeDemographic() throws IOException {
+    public void getChannelGenderAgeDemographic() throws IOException {
+        String message;
+        JSONArray array = new JSONArray();
+
         YouTubeAnalytics.Reports.Query request = youtubeAnalyticsService.reports()
                 .query();
         QueryResponse response = request.setDimensions("channel")
@@ -41,8 +45,15 @@ public class YoutubeAnalyticsFetcher {
                 String ageGroup = (String) row.get(0);
                 String gender = (String) row.get(1);
                 BigDecimal viewerPercentage = (BigDecimal) row.get(2);
-                System.out.println("Age Group: " + ageGroup + ", Gender: " + gender + ", Viewer Percentage: " + viewerPercentage);
+
+                JSONObject item = new JSONObject();
+                item.put("Age Group", ageGroup);
+                item.put("Gender", gender);
+                item.put("Viewer Precentage", viewerPercentage);
+                array.add(item);
             }
+            message = array.toJSONString();
+            System.out.print(message);
         }
     }
 
@@ -93,7 +104,10 @@ public class YoutubeAnalyticsFetcher {
         return videoIds;
     }
 
-    public void getVideoAgeAndGenderData(String videoId) throws IOException {
+    public JSONArray getVideoAgeAndGenderData(String videoId) throws IOException {
+        String message;
+        JSONArray array = new JSONArray();
+
         YouTubeAnalytics.Reports.Query request = youtubeAnalyticsService.reports()
                 .query();
         QueryResponse response = request.setDimensions("channel")
@@ -104,10 +118,29 @@ public class YoutubeAnalyticsFetcher {
                 .setDimensions("ageGroup,gender")
                 .setFilters("video==" + videoId)
                 .execute();
+        List<List<Object>> rows = response.getRows();
 
-        System.out.print(response);
+        if (rows != null) {
+            for (List<Object> row : rows) {
+                // Assuming date is the first element in each row
+                String ageGroup = (String) row.get(0);
+                String gender = (String) row.get(1);
+                BigDecimal viewerPercentage = (BigDecimal) row.get(2);
 
+                JSONObject item = new JSONObject();
+                item.put("Age Group", ageGroup);
+                item.put("Gender", gender);
+                item.put("Viewer Precentage", viewerPercentage);
+                array.add(item);
+            }
+        //    message = array.toJSONString();
+        //    System.out.print(message);
+            return array;
         }
+
+
+        return array;
+    }
 
     public String getVideoTitle(String videoId) throws IOException {
         return youtubeService.videos()
@@ -118,6 +151,29 @@ public class YoutubeAnalyticsFetcher {
                 .get(0)
                 .getSnippet()
                 .getTitle();
+    }
+
+    public void saveLatestVideosInfoToJSON() throws IOException {
+        String message;
+        JSONObject json = new JSONObject();
+        JSONArray array = new JSONArray();
+        int videoNumber = 1;
+        List<String> videoIDList = getLatestVideoIds();
+        for (String videoID:videoIDList) {
+                String videoTitle = getVideoTitle(videoID);
+                JSONArray videoData = getVideoAgeAndGenderData(videoID);
+
+                JSONObject item = new JSONObject();
+                item.put("videoId", videoID);
+                item.put("videoTitle", videoTitle);
+                item.put("Video Demographic", videoData);
+                array.add(item);
+                json.put(videoNumber, item);
+                videoNumber++;
+        }
+
+        message = json.toJSONString();
+        System.out.println(message);
     }
 
 }
