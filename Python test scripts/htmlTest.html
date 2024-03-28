@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viewer Distribution Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #container {
+      width: 500px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="viewerChart" width="400" height="400"></canvas>
+        <div id="datetimeInfo"></div>
+      </div>
+
+  <script>
+    // Your JSON data
+    var jsonData = {
+      "DateTimeGathered": "2024-03-28 14:23:36",
+      "channelDemographic": [
+        {
+          "gender": "male",
+          "ageGroup": "age13-17",
+          "viewerPercentage": 28.6
+        },
+        {
+          "gender": "male",
+          "ageGroup": "age18-24",
+          "viewerPercentage": 36.9
+        },
+        {
+          "gender": "male",
+          "ageGroup": "age25-34",
+          "viewerPercentage": 32.5
+        },
+        {
+          "gender": "female",
+          "ageGroup": "age25-34",
+          "viewerPercentage": 2.0
+        }
+      ]
+    };
+
+    // Process the JSON data into Chart.js compatible format
+    var labels = [];
+    var data = [];
+
+    jsonData.channelDemographic.forEach(function(item) {
+      labels.push(item.ageGroup + " " + item.gender);
+      data.push(item.viewerPercentage);
+    });
+
+    // Create the chart
+    var ctx = document.getElementById('viewerChart').getContext('2d');
+    var viewerChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Viewer Distribution %',
+          data: data,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+            }
+    
+        }
+      }
+    });
+
+    // Display datetimegathered information
+    var datetimeInfo = document.getElementById('datetimeInfo');
+    datetimeInfo.innerHTML = "Data gathered at: " + jsonData.DateTimeGathered;
+  </script>
+</body>
+</html>
