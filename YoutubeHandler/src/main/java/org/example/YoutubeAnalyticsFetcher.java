@@ -9,7 +9,10 @@ import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +93,7 @@ public class YoutubeAnalyticsFetcher {
         YouTube.Search.List request = youtubeService.search()
                 .list("snippet")
                 .setForMine(true)
-                .setMaxResults(10L)
+                .setMaxResults(2L) //amount of videos to get currently set to 2 during testing to save time
                 .setType("video")
                 .setOrder("date");
 
@@ -105,7 +108,7 @@ public class YoutubeAnalyticsFetcher {
     }
 
     public JSONArray getVideoAgeAndGenderData(String videoId) throws IOException {
-        String message;
+        // String message;
         JSONArray array = new JSONArray();
 
         YouTubeAnalytics.Reports.Query request = youtubeAnalyticsService.reports()
@@ -153,20 +156,36 @@ public class YoutubeAnalyticsFetcher {
                 .getTitle();
     }
 
+    public BigInteger getVideoTotalViews(String videoId) throws IOException {
+        return youtubeService.videos()
+                .list("statistics")
+                .setId(videoId)
+                .execute()
+                .getItems()
+                .get(0)
+                .getStatistics()
+                .getViewCount();
+}
+
     public void saveLatestVideosInfoToJSON() throws IOException {
         String message;
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = currentTime.format(formatter);
+        json.put("DateTime", formattedDateTime);
         int videoNumber = 1;
         List<String> videoIDList = getLatestVideoIds();
         for (String videoID:videoIDList) {
                 String videoTitle = getVideoTitle(videoID);
+                BigInteger videoViews = getVideoTotalViews(videoID);
                 JSONArray videoData = getVideoAgeAndGenderData(videoID);
-
                 JSONObject item = new JSONObject();
                 item.put("videoId", videoID);
                 item.put("videoTitle", videoTitle);
-                item.put("Video Demographic", videoData);
+                item.put("totalVideoViews", videoViews);
+                item.put("videoDemographic", videoData);
                 array.add(item);
                 json.put(videoNumber, item);
                 videoNumber++;
