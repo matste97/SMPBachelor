@@ -1,5 +1,7 @@
 {
-  "DateTimeGathered" : "2024-03-28 14:23:36",
+  "QueryEndTime" : "2024-03-28",
+  "QueryStartTime" : "2000-01-01",
+  "DateTimeGathered" : "2024-03-28 19:04:52",
   "channelDemographic" : [ {
     "gender" : "male",
     "ageGroup" : "age13-17",

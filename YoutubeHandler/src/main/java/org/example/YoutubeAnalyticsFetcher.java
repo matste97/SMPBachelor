@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,7 +35,11 @@ public class YoutubeAnalyticsFetcher {
         this.youtubeService = youtubeAuth.getYouTubeService();
     }
 
-    public void getChannelGenderAgeDemographic() throws IOException {
+    public void getChannelGenderAgeDemographicAllTime() throws IOException {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatterQuery = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String endDate = today.format(formatterQuery);
+
         //String message;
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();
@@ -42,14 +47,16 @@ public class YoutubeAnalyticsFetcher {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = currentTime.format(formatter);
         json.put("DateTimeGathered", formattedDateTime);
+        json.put("QueryStartTime", "2000-01-01");
+        json.put("QueryEndTime", endDate);
 
         YouTubeAnalytics.Reports.Query request = youtubeAnalyticsService.reports()
                 .query();
         QueryResponse response = request.setDimensions("channel")
                 .setIds("channel==MINE")
-                .setStartDate("2012-05-09")
-                .setEndDate("2023-05-09") //TODO: GET TIME DATE PROPERLY INSTEAD OF HARD CODED
                 .setMetrics("viewerPercentage")
+                .setStartDate("2000-01-01")  // Start date in the past
+                .setEndDate(endDate)
                 .setDimensions("ageGroup,gender")
                 .execute();
         List<List<Object>> rows = response.getRows();
@@ -67,7 +74,56 @@ public class YoutubeAnalyticsFetcher {
             }
             json.put("channelDemographic", array);
 
-            saveJsonObjectToFile(json, "InfoChannelDemographic");
+            saveJsonObjectToFile(json, "InfoChannelDemographicAllTime");
+        }
+    }
+
+    public void getChannelGenderAgeDemographicLast30Days() throws IOException {
+
+        LocalDate endDate = LocalDate.now();
+        // Calculate the start date by subtracting 30 days from today
+        LocalDate startDate = endDate.minusDays(30);
+
+        // Format dates to match the required format for the query
+        DateTimeFormatter formatterQuery = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedStartDate = startDate.format(formatterQuery);
+        String formattedEndDate = endDate.format(formatterQuery);
+
+        //String message;
+        JSONObject json = new JSONObject();
+        JSONArray array = new JSONArray();
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = currentTime.format(formatter);
+        json.put("DateTimeGathered", formattedDateTime);
+        json.put("QueryStartTime", formattedStartDate);
+        json.put("QueryEndTime", formattedEndDate);
+
+        YouTubeAnalytics.Reports.Query request = youtubeAnalyticsService.reports()
+                .query();
+        QueryResponse response = request.setDimensions("channel")
+                .setIds("channel==MINE")
+                .setMetrics("viewerPercentage")
+                .setStartDate(formattedStartDate)  // Start date in the past
+                .setEndDate(formattedEndDate)
+                .setDimensions("ageGroup,gender")
+                .execute();
+        List<List<Object>> rows = response.getRows();
+        if (rows != null) {
+            for (List<Object> row : rows) {
+                String ageGroup = (String) row.get(0);
+                String gender = (String) row.get(1);
+                BigDecimal viewerPercentage = (BigDecimal) row.get(2);
+
+                JSONObject item = new JSONObject();
+                item.put("ageGroup", ageGroup);
+                item.put("gender", gender);
+                item.put("viewerPercentage", viewerPercentage);
+                array.add(item);
+            }
+            json.put("channelDemographic", array);
+
+            saveJsonObjectToFile(json, "InfoChannelDemographicLast30Days");
         }
     }
 

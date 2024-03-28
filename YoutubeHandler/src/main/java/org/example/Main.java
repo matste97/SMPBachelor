@@ -8,7 +8,8 @@ public class Main {
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
         YoutubeAnalyticsFetcher YoutubeVideoIdFetcher = new YoutubeAnalyticsFetcher();
-          YoutubeVideoIdFetcher.getChannelGenderAgeDemographic();
+            YoutubeVideoIdFetcher.getChannelGenderAgeDemographicAllTime();
+            YoutubeVideoIdFetcher.getChannelGenderAgeDemographicLast30Days();
 //          System.out.println(YoutubeVideoIdFetcher.getLatestVideoIds());
 //          System.out.println(YoutubeVideoIdFetcher.getVideoTotalViews("J5ZvB9Yo95o"));
 //          YoutubeVideoIdFetcher.getVideoAgeAndGenderData("J5ZvB9Yo95o");
