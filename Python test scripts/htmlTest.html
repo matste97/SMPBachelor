@@ -21,46 +21,60 @@
   </style>
 </head>
 <body>
-    <div id="container">
-        <canvas id="viewerChart" width="400" height="400"></canvas>
-        <div id="datetimeInfo"></div>
-      </div>
+  <div id="container">
+    <canvas id="viewerChart" width="400" height="400"></canvas>
+    <div id="datetimeInfo"></div>
+  </div>
 
   <script>
     // Your JSON data
     var jsonData = {
       "DateTimeGathered": "2024-03-28 14:23:36",
       "channelDemographic": [
-        {
-          "gender": "male",
-          "ageGroup": "age13-17",
-          "viewerPercentage": 28.6
-        },
-        {
-          "gender": "male",
-          "ageGroup": "age18-24",
-          "viewerPercentage": 36.9
-        },
-        {
-          "gender": "male",
-          "ageGroup": "age25-34",
-          "viewerPercentage": 32.5
-        },
-        {
-          "gender": "female",
-          "ageGroup": "age25-34",
-          "viewerPercentage": 2.0
-        }
-      ]
+  {
+    "gender": "male",
+    "ageGroup": "age13-17",
+    "viewerPercentage": 20
+  },
+  {
+    "gender": "male",
+    "ageGroup": "age18-24",
+    "viewerPercentage": 30
+  },
+  {
+    "gender": "male",
+    "ageGroup": "age25-34",
+    "viewerPercentage": 25
+  },
+  {
+    "gender": "female",
+    "ageGroup": "age13-17",
+    "viewerPercentage": 15
+  },
+  {
+    "gender": "female",
+    "ageGroup": "age18-24",
+    "viewerPercentage": 5
+  },
+  {
+    "gender": "female",
+    "ageGroup": "age25-34",
+    "viewerPercentage": 5
+  }
+]
+
     };
 
     // Process the JSON data into Chart.js compatible format
     var labels = [];
     var data = [];
+    var backgroundColors = [];
 
-    jsonData.channelDemographic.forEach(function(item) {
+    jsonData.channelDemographic.forEach(function(item, index) {
       labels.push(item.ageGroup + " " + item.gender);
       data.push(item.viewerPercentage);
+      // Generate colors based on the viewer percentage
+      backgroundColors.push(selectColor(index));
     });
 
     // Create the chart
@@ -72,18 +86,8 @@
         datasets: [{
           label: 'Viewer Distribution %',
           data: data,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)'
-          ],
+          backgroundColor: backgroundColors,
+          borderColor: backgroundColors, // Use the same color for border
           borderWidth: 1
         }]
       },
@@ -91,15 +95,21 @@
         scales: {
           y: {
             beginAtZero: true
-            }
-    
+          }
         }
       }
     });
 
+    // Function to generate a color based on the number
+    function selectColor(number) {
+      const hue = number * 137.508; // use golden angle approximation
+      return `hsl(${hue},50%,75%)`;
+    }
+
     // Display datetimegathered information
     var datetimeInfo = document.getElementById('datetimeInfo');
     datetimeInfo.innerHTML = "Data gathered at: " + jsonData.DateTimeGathered;
+
   </script>
 </body>
 </html>
