@@ -1,0 +1,16 @@
+{
+  "DateTimeGathered" : "2024-03-28 14:23:36",
+  "channelDemographic" : [ {
+    "gender" : "male",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 28.6
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 36.9
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 34.5
+  } ]
+}
