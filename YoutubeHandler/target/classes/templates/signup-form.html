@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign up</title>
+    <link rel="stylesheet" th:href="@{/styles/register.css}">
+    <link rel="stylesheet" th:href="@{/styles/input-form-design.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/footer.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/header.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Sign up page">
+</head>
+<body>
+<header th:replace="components/header"></header>
+<main style="background-color: #EAFFFE;">
+    <div id="main-container">
+        <form method="post" th:action="@{/signup}" th:object="${signupData}">
+        <div id="register-container">
+            <h2>Create an account</h2>
+            <label for="username" class="input-label">E-mail:</label>
+            <input type="email" class="text-input" id="username" name="username">
+            <label for="password" class="input-label">Password:</label>
+            <input type="password" id="password" name="password" class="text-input" >
+            <label for="repeat" class="input-label">Repeat password:</label>
+            <input type="password" id="repeat" name="repeat" class="text-input" >
+            <br>
+            <h3 th:if="${errorMessage != null}" class="alert" th:text="${errorMessage}"></h3>
+            <p class="action-explanation">
+                Already have an account?
+                <a th:href="@{/login}">
+                    <button type="button">Log in</button>
+                </a>
+            </p>
+            <button class="white-outlined-btn-big" type="submit">SUBMIT</button>
+        </div>
+        </form>
+    </div>
+</main>
+<footer th:replace="components/footer"></footer>
+</body>
+</html>

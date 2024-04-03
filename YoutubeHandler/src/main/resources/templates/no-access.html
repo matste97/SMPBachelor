@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>No access!</title>
+    <link rel="stylesheet" th:href="@{/styles/input-form-design.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/footer.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/header.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/userfeedback.css}">
+    <meta name="description" content="No access page">
+</head>
+<body>
+<header th:replace="components/header"></header>
+<main>
+        <div id="feedback-container">
+            <h1>You don't have access to this page!</h1>
+            <a th:href="@{/}">
+                <button class="white-outlined-btn-big" >BACK TO SAFETY</button>
+            </a>
+        </div>
+</main>
+<footer th:replace="components/footer"></footer>
+</body>
+</html>

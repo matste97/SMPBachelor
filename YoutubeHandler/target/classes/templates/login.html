@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log in</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/login.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/footer.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/header.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Login page">
+</head>
+<body>
+<header th:replace="components/header"></header>
+<main style="background-color: #EAFFFE;">
+    <div id="main-container">
+        <form class="log-in-container" method="post" th:action="@{/login}">
+            <h2>Welcome Back!</h2>
+            <label for="username" class="input-label">E-mail:</label>
+            <input type="email" id="username" class="text-input" name="username">
+            <label for="password" class="input-label">Password:</label>
+            <input type="password" id="password" name="password" class="text-input" >
+            <p th:if="${param.error}" class="alert">Invalid email or password</p>
+            <button type="submit" class="white-outlined-btn-small">LOG IN</button>
+            <a th:href="@{/forgotPassword}">
+                <button type="button" class="action-question-btn">Forgot your password?</button>
+            </a>
+        </form>
+
+        <div class="new-account-container">
+            <h2>Don't have an account?</h2>
+            <p class="action-explanation">Click here to register as a costumer<br>and create an account</p>
+            <a th:href="@{/signup}">
+            <button class=white-outlined-btn-big>REGISTER</button>
+            </a>
+        </div>
+    </div>
+</main>
+<footer th:replace="components/footer"></footer>
+</body>
+</html>

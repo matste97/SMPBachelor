@@ -6,12 +6,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="samples" />
+        <module name="SocialMediaDemographicApp" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="samples" target="17" />
       <module name="testSMP" target="17" />
       <module name="youtube-analytics-demo" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="SocialMediaDemographicApp" options="-parameters" />
+    </option>
   </component>
 </project>

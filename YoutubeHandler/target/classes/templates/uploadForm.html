@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMP Youtube</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/footer.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/header.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Youtube client secret upload">
+</head>
+<body>
+<header th:replace="components/header"></header>
+
+<main>
+    <h2>Upload Client Secrets</h2>
+    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <br/><br/>
+        <input type="submit" value="Upload and Open Google OAuth" />
+    </form>
+
+
+</main>
+<footer th:replace="components/footer"></footer>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" th:href="@{/styles/user.css}">
+    <link rel="stylesheet" th:href="@{/styles/input-form-design.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/footer.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/header.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="User page">
+</head>
+<body>
+<header th:replace="components/header"></header>
+<main>
+    <section id="user-section">
+        <div class="user-header">
+            <h1>USER PROFILE</h1>
+        </div>
+        <div id="user-container">
+            <div id="user-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div id="user-categories">
+                <button class="user-btn" type="submit" style="border-bottom: 2px solid #094A4F; padding: 0.8rem;">
+                    <a th:href="@{/users/} + ${user.username}">
+                    <div>PROFILE</div>
+                    </a>
+                </button>
+
+            </div>
+            <div class="user-info">
+                <form action="" method="post" class="bio user-info-form">
+                    <div id="register-container">
+                        <h1 th:text="'Welcome, ' + ${user.username} +  '! Here you can see and modify your profile:'"></h1>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+
+<footer th:replace="components/footer"></footer>
+</body>
+</html>

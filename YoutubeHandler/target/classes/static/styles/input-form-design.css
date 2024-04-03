@@ -1,0 +1,133 @@
+
+/*****************************
+    Header
+ *****************************/
+#main-container h2{
+    font-size: 3rem;
+    font-weight: 500;
+    text-align: center;
+
+}
+
+/*****************************
+    Labels
+ *****************************/
+
+.input-label{
+    color: #094A4F;
+    font-weight: bold;
+    font-size: 1.4rem;
+    min-width: 20rem;
+    max-width: 60rem;
+    width:70%;
+    margin-top: 2rem;
+    padding-bottom:1rem;
+
+}
+
+
+
+/*****************************
+ Input
+ *****************************/
+
+.text-input{
+    height: 4rem;
+    min-width: 20rem;
+    max-width: 60rem;
+    width:70%;
+    border: 1px solid rgba(9, 74, 79, 0.49);
+}
+
+.select-item{
+    height: 4rem;
+    min-width: 20rem;
+    max-width: 60rem;
+    width:70%;
+    border: 1px solid rgba(9, 74, 79, 0.49);
+}
+
+.text-area{
+    min-height: 15rem;
+    min-width: 20rem;
+    max-width: 60rem;
+    width:70%;
+    border: 1px solid rgba(9, 74, 79, 0.49);
+}
+
+/*****************************
+   Button
+ *****************************/
+
+.white-outlined-btn-small{
+    text-align: center;
+    border:1.5px solid #094A4F;
+    background-color: white;
+    border-radius: 10rem;
+    font-size: 1.6rem;
+    padding: 1rem 4rem 1rem 4rem;
+    max-width:15rem;
+    margin-top: 3rem ;
+}
+
+.white-outlined-btn-big{
+    text-align: center;
+    border:1.5px solid #094A4F;
+    background-color: white;
+    border-radius: 10rem;
+    font-size: 1.6rem;
+    padding: 1rem 4rem 1rem 4rem;
+    width:20rem;
+
+
+}
+
+.white-outlined-btn-big:hover{
+    border: 2px solid #094A4F;
+    padding: 0.95rem 3.95rem 0.95rem 3.95rem;
+}
+
+.white-outlined-btn-small:hover{
+    border: 2px solid #094A4F;
+    padding: 0.95rem 3.95rem 0.95rem 3.95rem;
+}
+
+/*****************************
+   Action explanation (paragraph)
+ *****************************/
+
+.action-explanation{
+    margin:3rem 0;
+    font-size: 1.4rem;
+    color: black;
+    text-align: center;
+}
+
+/*****************************
+    Action question
+ *****************************/
+
+.action-question-btn{
+    color: black;
+    font-size: 1.4rem;
+    margin: 2rem 0;
+}
+
+.action-question-btn:hover{
+   text-decoration: underline;
+}
+
+@media(max-width: 43.75em) {
+    .input-label{
+        width: 100%;
+    }
+    .text-input{
+        width: 100%;
+    }
+    .select-item{
+        width: 100%;
+    }
+    .text-area{
+        width: 100%;
+    }
+}
