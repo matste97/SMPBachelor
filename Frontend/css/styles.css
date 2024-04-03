@@ -51,3 +51,9 @@ body {
     right: 35px;
     }
 }
+
+#genderAgeChart {
+    width: fit-content;
+    height: fit-content;
+}
+

@@ -27,6 +27,8 @@
 
 
 <canvas id="genderAgeChart"></canvas>
+
+
 <script>
     var ctx = document.getElementById('genderAgeChart').getContext('2d');
     var genderAgeChart = new Chart(ctx, {
@@ -49,17 +51,18 @@
             }]
         },
         options: {
+
             scales: {
                 y: {
                     beginAtZero: true,
-                    stacked: true,
+                    stacked: false,
                     title: {
                         display: true,
                         text: '% av lesere'
                     }
                 },
                 x: {
-                    stacked: true,
+                    stacked: false,
                     title: {
                         display: true,
                         text: 'Demografi Facebook'
