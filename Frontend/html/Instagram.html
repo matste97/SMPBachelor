@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<script src="../js/test.js"></script>
+<link rel="stylesheet" href="../css/styles.css">
+<head>
+    <title>Gender and Age Bar Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<div id="myNav" class="overlay">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div class="overlay-content">
+    <a href="SMP.html">Sunnmørsposten</a>
+    <a href="Facebook.html">Facebook</a>
+    <a href="Instagram.html">Instagram</a>
+    <a href="Youtube.html">Youtube</a>
+    <a href="Tiktok.html">Tiktok</a>
+    <a href="Snapchat.html">Snapchat</a>
+  </div>
+</div>
+
+
+<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
+
+
+
+<canvas id="genderAgeChart"></canvas>
+<script>
+    var ctx = document.getElementById('genderAgeChart').getContext('2d');
+    var genderAgeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+            datasets: [{
+                label: 'Male',
+                data: [2.7, 5.5, 8.2, 9.6, 6.9, 4.0], // Example data for males in each age group
+                backgroundColor: 'rgba(54, 162, 235, 0.5)', // Blue color
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Female',
+                data: [1.9, 7.5, 13.4, 17.7, 13.7, 8.9], // Example data for females in each age group
+                backgroundColor: 'rgba(255, 99, 132, 0.5)', // Red color
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stacked: true,
+                    title: {
+                        display: true,
+                        text: '% av følgere'
+                    }
+                },
+                x: {
+                    stacked: true,
+                    title: {
+                        display: true,
+                        text: 'Demografi Instagram'
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+
+
+     
+</body>
+</html>
