@@ -1,18 +1,18 @@
 {
   "QueryEndTime" : "2024-04-03",
   "QueryStartTime" : "2000-01-01",
-  "DateTimeGathered" : "2024-04-03 20:07:57",
+  "DateTimeGathered" : "2024-04-03 22:22:20",
   "channelDemographic" : [ {
     "gender" : "male",
     "ageGroup" : "age13-17",
-    "viewerPercentage" : 28.6
+    "viewerPercentage" : 12
   }, {
     "gender" : "male",
     "ageGroup" : "age18-24",
-    "viewerPercentage" : 36.9
+    "viewerPercentage" : 66
   }, {
     "gender" : "male",
     "ageGroup" : "age25-34",
-    "viewerPercentage" : 34.5
+    "viewerPercentage" : 22
   } ]
 }

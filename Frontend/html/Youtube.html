@@ -27,22 +27,23 @@
 
 
 <canvas id="genderAgeChart"></canvas>
-<script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
     var ctx = document.getElementById('genderAgeChart').getContext('2d');
     var genderAgeChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+            labels: [/* Labels */],
             datasets: [{
                 label: 'Male',
-                data: [2.5, 8.4, 8.8, 9.2, 7.6, 7.5], // Example data for males in each age group
+                data: [/* Male data */],
                 backgroundColor: 'rgba(54, 162, 235, 0.5)', // Blue color
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
             },
             {
                 label: 'Female',
-                data: [2, 8.5, 10.1, 12.3, 10.6, 12.5], // Example data for females in each age group
+                data: [/* Female data */],
                 backgroundColor: 'rgba(255, 99, 132, 0.5)', // Red color
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1
@@ -68,6 +69,26 @@
             }
         }
     });
+
+    var labels = [];
+    var maleData = [];
+    var femaleData = [];
+    /*[# th:each="demographic : ${videosLatest.channelDemographic}"]*/
+        labels.push([[${demographic.ageGroup}]]);
+        if ([[${demographic.gender}]] === 'male') {
+            maleData.push([[${demographic.viewerPercentage}]]);
+            femaleData.push(0);
+        } else {
+            femaleData.push([[${demographic.viewerPercentage}]]);
+            maleData.push(0);
+        }
+    /*[/]*/
+
+    genderAgeChart.data.labels = labels;
+    genderAgeChart.data.datasets[0].data = maleData;
+    genderAgeChart.data.datasets[1].data = femaleData;
+    genderAgeChart.update();
+    /*]]>*/
 </script>
 
 

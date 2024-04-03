@@ -47,7 +47,6 @@ public class YoutubeAPIController {
     private final ObjectMapper mapper = new ObjectMapper();
     private YouTubeAnalytics youtubeAnalyticsService;
     private YouTube youtubeService;
-    private static final String CALLBACK_URL = "http://localhost:8081/Callback";
     @GetMapping("/upload")
     public String showUploadForm(Model model) {
         return "uploadForm";
@@ -74,52 +73,37 @@ public class YoutubeAPIController {
             // Redirect back to the uploadStatus page or handle as needed
         }
     }
+
+
     @GetMapping("/youtube")
-    public String youtubePage(Model model) throws IOException {
+    public String youtubePage(Model model) {
+        // Define file paths
+        String channelDataAllTimePath = EXTERNAL_JSON_DIRECTORY + "/InfoChannelDemographicAllTime.json";
+        String channel30DaysDataPath = EXTERNAL_JSON_DIRECTORY + "/InfoChannelDemographicLast30Days.json";
+        String videosLatestPath = EXTERNAL_JSON_DIRECTORY + "/InfoLatestVideos.json";
 
+        // Read JSON files and send them to the model
+        try {
+            String channelDataAllTimeJson = new String(Files.readAllBytes(Paths.get(channelDataAllTimePath)));
+            String channel30DaysDataJson = new String(Files.readAllBytes(Paths.get(channel30DaysDataPath)));
+            String videosLatestJson = new String(Files.readAllBytes(Paths.get(videosLatestPath)));
 
-        boolean fetchNeeded = false;
-        // Check if client_secrets.json file exists
-        File clientSecretsFile = new File(EXTERNAL_JSON_DIRECTORY + "client_secrets.json");
-        if (clientSecretsFile.exists()) {
-            // File exists, return the normal page
-
-            // Define file paths
-            String channelDataAllTimePath = EXTERNAL_JSON_DIRECTORY + "/InfoChannelDemographicAllTime.json";
-            String channel30DaysDataPath = EXTERNAL_JSON_DIRECTORY + "/InfoChannelDemographicLast30Days.json";
-            String videosLatestPath = EXTERNAL_JSON_DIRECTORY + "/InfoLatestVideos.json";
-
-            // Read content of JSON files
-            String channelDataAllTime = null;
-            String channel30DaysData = null;
-            String videosLatest = null;
-            try {
-                channelDataAllTime = new String(Files.readAllBytes(Paths.get(channelDataAllTimePath)));
-                channel30DaysData = new String(Files.readAllBytes(Paths.get(channel30DaysDataPath)));
-                videosLatest = new String(Files.readAllBytes(Paths.get(videosLatestPath)));
-            } catch (IOException e) {
-                // If any of the files doesn't exist, set fetchNeeded to true
-                fetchNeeded = true;
-            }
-
-            // Add JSON content to the model if available, otherwise set fetchNeeded flag
-            if (channelDataAllTime != null && channel30DaysData != null && videosLatest != null) {
-                model.addAttribute("channelDataAllTime", channelDataAllTime);
-                model.addAttribute("channel30DaysData", channel30DaysData);
-                model.addAttribute("videosLatest", videosLatest);
-            } else {
-                fetchNeeded = true; // Update fetchNeeded flag if any JSON file is missing
-            }
-        } else {
-            // File doesn't exist, return the upload form page
-            return "uploadForm";
+            model.addAttribute("channelDataAllTime", channelDataAllTimeJson);
+            model.addAttribute("channel30DaysData", channel30DaysDataJson);
+            model.addAttribute("videosLatest", videosLatestJson);
+        } catch (IOException e) {
+            // Handle file reading exception
+            e.printStackTrace();
+            // You might want to add an error message to the model
+            model.addAttribute("errorMessage", "Error reading JSON files");
+            // Return an error page or handle the error appropriately
+            return "no-access";
         }
 
-        // Add fetchNeeded flag to the model
-        model.addAttribute("fetchNeeded", fetchNeeded);
-
-        return "youtube";
+        // Return the Thymeleaf template
+        return "YoutubeNew";
     }
+
 
     @GetMapping("/updateJsonAndRefresh")
     @ResponseBody

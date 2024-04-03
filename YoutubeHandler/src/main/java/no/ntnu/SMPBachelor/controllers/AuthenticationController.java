@@ -26,7 +26,13 @@ public class AuthenticationController {
             description = "Displays the login form"
     )
     public String loginForm() {
-        return "login";
+        return "loginNew";
+    }
+
+    @PostMapping("/login")
+    public String handleLogin() {
+
+        return "redirect:/";
     }
 
     @GetMapping("/forgotPassword")
