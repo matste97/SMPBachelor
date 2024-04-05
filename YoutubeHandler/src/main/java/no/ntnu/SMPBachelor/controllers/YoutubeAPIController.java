@@ -70,7 +70,6 @@ public class YoutubeAPIController {
             }
         } else {
             model.addAttribute("message", "File is empty");
-            // Redirect back to the uploadStatus page or handle as needed
         }
     }
 
@@ -101,7 +100,7 @@ public class YoutubeAPIController {
         }
 
         // Return the Thymeleaf template
-        return "YoutubeNew";
+        return "Youtube";
     }
 
 
@@ -250,7 +249,7 @@ public class YoutubeAPIController {
         YouTube.Search.List request = youtubeService.search()
                 .list("snippet")
                 .setForMine(true)
-                .setMaxResults(2L) //amount of videos to get currently set to 2 during testing to save time
+                .setMaxResults(5L) //amount of videos to get currently set to 2 during testing to save time
                 .setType("video")
                 .setOrder("date");
 
@@ -332,7 +331,7 @@ public class YoutubeAPIController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = currentTime.format(formatter);
         json.put("DateTimeGathered", formattedDateTime);
-        int videoNumber = 1;
+        int videoNumber = 1; //initial id
         List<String> videoIDList = getLatestVideoIds();
         for (String videoID:videoIDList) {
                 String videoTitle = getVideoTitle(videoID);

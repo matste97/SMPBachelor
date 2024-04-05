@@ -1,0 +1,16 @@
+<nav th:fragment="navigation">
+  <div id="myNav" class="overlay">
+    <a href="#" class="closebtn" onclick="closeNav(); return false;">&times;</a>
+
+    <div class="overlay-content">
+      <a th:href="@{/}">SMP</a>
+      <a th:href="@{/youtube}">YouTube</a>
+      <a th:href="@{/tiktok}">TikTok</a>
+      <a th:href="@{/instagram}">Instagram</a>
+
+    </div>
+  </div>
+
+
+  <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
+</nav>

@@ -1,0 +1,27 @@
+main{
+    display: flex;
+    flex-direction: column;
+    gap:100px;
+    text-align: center;
+}
+
+#ChannelChartsContainer{
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    justify-content: center;
+    column-gap: 30%;
+}
+
+#VideosChartContainer{
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 20%;
+}
+.video-chart-container{
+    width: 400px;
+}

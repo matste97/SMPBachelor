@@ -2,7 +2,9 @@
 <html lang="en">
 <html>
 <script th:src="@{/js/test.js}"></script>
+<script th:src="@{/js/YoutubeChannelChart.js}"></script>
 <link rel="stylesheet" type="text/css" th:href="@{/styles/styles.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/youtube.css}">
 <head>
   <meta charset="UTF-8">
   <title>SMP Youtube</title>
@@ -29,108 +31,35 @@
 </head>
 <body>
 
-<div id="myNav" class="overlay">
-  <a href="#" class="closebtn" onclick="closeNav(); return false;">&times;</a>
-
-  <div class="overlay-content">
-    <a th:href="@{/}">SMP</a>
-    <a th:href="@{/youtube}">YouTube</a>
-    <a th:href="@{/tiktok}">TikTok</a>
-    <a th:href="@{/instagram}">Instagram</a>
-
-  </div>
-</div>
-
-
-<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
+<nav th:replace="components/navigation"></nav>
 
 
 <button id="updateJsonBtn">
   Update JSON Files
   <div class="spinner"></div>
 </button>
-<canvas id="genderAgeChart"></canvas>
+<body>
+<div id="ChannelChartsContainer">
+  <div id="AllTimeContainer" class="channel-chart">
+    <h2>Channel demographic All Time</h2>
+    <canvas id="channelChartAllTime" width="400" height="400"></canvas>
+  </div>
+  <div id="30DayContainer" class="channel-chart">
+    <h2>Channel demographic last 30 days</h2>
+    <canvas id="channelChart30Days" width="400" height="400"></canvas>
+  </div>
+</div>
+
+
 <script th:inline="javascript">
   /*<![CDATA[*/
   var channelDataAllTime = /*[[${channelDataAllTime}]]*/ '';
+  var channel30DaysData = /*[[${channel30DaysData}]]*/ '';
 
   console.log('Channel Data All Time:', channelDataAllTime); // Log the JSON data
-
-  // Process the JSON data and update the chart
-  var processData = function (jsonData) {
-    // Parse the JSON object
-    var data = JSON.parse(jsonData).channelDemographic;
-    var labels = [];
-    var maleData = [];
-    var femaleData = [];
-
-    // Extract data from JSON and populate arrays
-    data.forEach(function (demographic) {
-      var ageGroupIndex = labels.indexOf(demographic.ageGroup);
-      if (ageGroupIndex === -1) {
-        labels.push(demographic.ageGroup);
-        maleData.push(0);
-        femaleData.push(0);
-        ageGroupIndex = labels.length - 1;
-      }
-      if (demographic.gender === 'male') {
-        maleData[ageGroupIndex] = demographic.viewerPercentage;
-      } else {
-        femaleData[ageGroupIndex] = demographic.viewerPercentage;
-      }
-    });
-
-    // Update chart data
-    genderAgeChart.data.labels = labels;
-    genderAgeChart.data.datasets[0].data = maleData;
-    genderAgeChart.data.datasets[1].data = femaleData;
-    genderAgeChart.update();
-  };
-
-  // Initialize the chart
-  var ctx = document.getElementById('genderAgeChart').getContext('2d');
-  var genderAgeChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Male',
-        data: [],
-        backgroundColor: 'rgba(54, 162, 235, 0.5)', // Blue color
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
-      },
-        {
-          label: 'Female',
-          data: [],
-          backgroundColor: 'rgba(255, 99, 132, 0.5)', // Red color
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1
-        }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-          stacked: false,
-          title: {
-            display: true,
-            text: '% av seere'
-          }
-        },
-        x: {
-          stacked: false, // Clustered bars
-          title: {
-            display: true,
-            text: 'Demografi Youtube'
-          }
-        }
-      }
-    }
-  });
-
-  // Call processData function with channelDataAllTime JSON
-  processData(channelDataAllTime);
+  console.log('Channel Data 30 Days:', channel30DaysData); // Log the JSON data
+  createChart('channelChartAllTime', channelDataAllTime);
+  createChart('channelChart30Days', channel30DaysData);
   /*]]>*/
 </script>
 

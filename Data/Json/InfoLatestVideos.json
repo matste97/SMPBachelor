@@ -11,5 +11,23 @@
     "videoId" : "pJSAVo3EFa4",
     "videoTitle" : "My Broadcast"
   },
-  "DateTimeGathered" : "2024-04-03 22:26:29"
+  "3" : {
+    "videoDemographic" : [ ],
+    "totalVideoViews" : 0,
+    "videoId" : "S8mrj3o85Yk",
+    "videoTitle" : "My Broadcast"
+  },
+  "4" : {
+    "videoDemographic" : [ ],
+    "totalVideoViews" : 1,
+    "videoId" : "KB-nyB9LGOw",
+    "videoTitle" : "EarlyLegendary #short"
+  },
+  "5" : {
+    "videoDemographic" : [ ],
+    "totalVideoViews" : 0,
+    "videoId" : "XcX9UP0KqiI",
+    "videoTitle" : "test new settings"
+  },
+  "DateTimeGathered" : "2024-04-05 18:14:01"
 }
