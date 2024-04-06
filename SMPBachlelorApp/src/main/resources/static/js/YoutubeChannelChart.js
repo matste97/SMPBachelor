@@ -1,9 +1,7 @@
 // chartComponent.js
 
 function createChart(containerId, channelData) {
-    console.log(channelData);
     var data = JSON.parse(channelData).channelDemographic;
-    console.log(data);
     var ctx = document.getElementById(containerId).getContext('2d');
     var labels = [];
     var maleData = [];
@@ -54,7 +52,19 @@ function createChart(containerId, channelData) {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    stacked: false,
+                    title: {
+                        display: true,
+                        text: '% of viewers'
+                    }
+                },
+                x: {
+                    stacked: false,
+                    title: {
+                        display: true,
+                        text: 'Demographic for channel'
+                    }
                 }
             }
         }

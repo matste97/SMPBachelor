@@ -8,8 +8,6 @@ function generateCharts(jsonData) {
         if (key !== "DateTimeGathered") {
 
             var videoData = data[key];
-            console.log('videoData:', videoData);
-            console.log('Key:', key);
             var individualChartContainer = document.createElement('div');
             individualChartContainer.className = 'video-chart-container';
 
@@ -22,9 +20,13 @@ function generateCharts(jsonData) {
 
                 // Video Title
                 var chartTitle = document.createElement('h2');
+                var chartViews = document.createElement('p');
                 chartTitle.className = 'chart-title';
-                chartTitle.textContent = videoData.videoTitle + ' - Total Views: ' + videoData.totalVideoViews;
+                chartTitle.className = 'chart-views';
+                chartTitle.textContent = videoData.videoTitle;
+                chartViews.textContent = 'Total Views: ' + videoData.totalVideoViews;
                 titleAndViewsContainer.appendChild(chartTitle);
+                titleAndViewsContainer.appendChild(chartViews);
 
                 var canvas = document.createElement('canvas');
                 canvas.width = 400; // Set width to 400
@@ -86,7 +88,19 @@ function generateCharts(jsonData) {
                     options: {
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                stacked: false,
+                                title: {
+                                    display: true,
+                                    text: '% of viewers'
+                                }
+                            },
+                            x: {
+                                stacked: false,
+                                title: {
+                                    display: true,
+                                    text: 'Demographic for video'
+                                }
                             }
                         }
                     }
