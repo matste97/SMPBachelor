@@ -26,7 +26,7 @@ public class AuthenticationController {
             description = "Displays the login form"
     )
     public String loginForm() {
-        return "loginNew";
+        return "login";
     }
 
     @PostMapping("/login")

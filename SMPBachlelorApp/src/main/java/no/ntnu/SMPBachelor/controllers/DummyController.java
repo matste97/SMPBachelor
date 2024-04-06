@@ -22,7 +22,7 @@ public class DummyController {
             description = "Displays the tiktok page"
     )
     public String tiktok(Model model) {
-        return "no-access";
+        return "tiktok";
     }
 
 
@@ -33,7 +33,25 @@ public class DummyController {
             description = "Displays the insta page"
     )
     public String insta(Model model) {
-        return "no-access";
+        return "instagram";
+    }
+
+    @GetMapping("facebook")
+    @Operation(
+            summary = "Show facebook page",
+            description = "Displays the facebook page"
+    )
+    public String facebook(Model model) {
+        return "facebook";
+    }
+
+    @GetMapping("snapchat")
+    @Operation(
+            summary = "Show snapchat page",
+            description = "Displays the snapchat page"
+    )
+    public String snapchat(Model model) {
+        return "snapchat";
     }
 
 

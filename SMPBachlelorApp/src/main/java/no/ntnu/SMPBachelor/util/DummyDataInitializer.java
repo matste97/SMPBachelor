@@ -31,11 +31,11 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationRead
     }
 
     private void makeUsers(){
-        Optional<User> rootUserExist = userRepository.findByUsername("admin@smp.no");
+        Optional<User> rootUserExist = userRepository.findByUsername("SMPAdmin");
         if(rootUserExist.isEmpty()){
             String pass = System.getenv("SMPBACHELOR_PASS");
             logger.info("Importing user data");
-            User root = new User("admin@smp.no", createHash(pass));
+            User root = new User("SMPAdmin", createHash(pass));
 
             Role user = new Role("ROLE_USER");
             Role admin = new Role("ROLE_ADMIN");

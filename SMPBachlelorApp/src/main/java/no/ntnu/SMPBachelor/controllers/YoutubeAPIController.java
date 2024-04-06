@@ -96,7 +96,7 @@ public class YoutubeAPIController {
             // You might want to add an error message to the model
             model.addAttribute("errorMessage", "Error reading JSON files");
             // Return an error page or handle the error appropriately
-            return "no-access";
+            return "Youtube";
         }
 
         // Return the Thymeleaf template

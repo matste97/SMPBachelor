@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" th:href="@{/styles/youtube.css}">
 <head>
   <meta charset="UTF-8">
-  <title>SMP Youtube</title>
+  <title>Youtube</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <style>
@@ -34,12 +34,13 @@
 <nav th:replace="components/navigation"></nav>
 
 
-<button id="updateJsonBtn">
-  Update JSON Files
-  <div class="spinner"></div>
-</button>
-<body>
+
 <main>
+  <button id="updateJsonBtn">
+    Update JSON Files
+    <div class="spinner"></div>
+  </button>
+  <body>
 <div id="ChannelChartsContainer">
   <div id="AllTimeContainer" class="channel-chart">
     <h2>Channel demographic All Time</h2>

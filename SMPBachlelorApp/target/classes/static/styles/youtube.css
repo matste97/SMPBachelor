@@ -5,6 +5,16 @@ main{
     text-align: center;
 }
 
+main button{
+    text-align: center;
+    width: 20%;
+    margin: 0 auto;
+}
+
+main button .spinner {
+    margin: 0 auto;
+}
+
 #ChannelChartsContainer{
     display: flex;
     flex-direction: row;
