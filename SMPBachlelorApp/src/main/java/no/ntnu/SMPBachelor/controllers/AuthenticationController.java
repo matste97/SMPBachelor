@@ -54,7 +54,7 @@ public class AuthenticationController {
             description = "Displays the sign-up form"
     )
     public String signupForm() {
-        return "signup-form";
+        return "signUp";
     }
 
     /**
@@ -71,14 +71,14 @@ public class AuthenticationController {
         model.addAttribute("signupData", signupData);
         if (!signupData.getPassword().equals(signupData.getRepeat())) {
             model.addAttribute("errorMessage", "Passwords do not match");
-            return "signup-form";
+            return "signUp";
         }
         String errorMessage = userService.tryCreateNewUser(signupData.getUsername(), signupData.getPassword());
         if (errorMessage == null) {
-            return "signup-success";
+            return "signUpSuccess";
         } else {
             model.addAttribute("errorMessage", errorMessage);
-            return "signup-form";
+            return "signUp";
         }
     }
 

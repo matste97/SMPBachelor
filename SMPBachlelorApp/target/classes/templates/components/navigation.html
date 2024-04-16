@@ -13,6 +13,7 @@
         <a th:href="@{/login}" aria-label="Go to login page">Login</a>
       </th:block>
       <th:block th:if="${user != null}">
+        <a th:if="${user.isAdmin}" th:href="@{/admin}">ADMIN</a>
        <a th:href="@{/logout}">Log Out</a>
       </th:block>
     </div>

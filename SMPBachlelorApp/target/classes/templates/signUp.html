@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/styles/styles.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/styles/loginstyles.css}">
+  <script th:src="@{/js/Navigation.js}"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<nav th:replace="components/navigation"></nav>
+
+  <div class="login-container">
+    <form class="login-form" method="post" th:action="@{/signup}" th:object="${signupData}">
+      <div class="input-group">
+        <h2>Create an account</h2>
+        <label for="username" class="input-label">Username:</label>
+        <input class="text-input" id="username" name="username">
+        <label for="password" class="input-label">Password:</label>
+        <input type="password" id="password" name="password" class="text-input" >
+        <label for="repeat" class="input-label">Repeat password:</label>
+        <input type="password" id="repeat" name="repeat" class="text-input" >
+        <br>
+        <h3 th:if="${errorMessage != null}" class="alert" th:text="${errorMessage}"></h3>
+        <button type="submit">SUBMIT</button>
+      </div>
+    </form>
+    <div class="logo-container">
+      <img th:src="@{img/smplogo.png}" alt="Logo">
+    </div>
+  </div>
+</body>
+</html>

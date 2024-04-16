@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/styles.css}">
+    <script th:src="@{/js/Navigation.js}"></script>
+    <script th:inline="javascript">
+        function confirmDelete(username, isAdmin) {
+            console.log("Delete button clicked for user: " + username);
+            console.log("User is " + isAdmin);
+            if (isAdmin === 'true') {
+                alert("Admin user cannot be deleted.");
+            } else {
+                var result = confirm("Are you sure you want to delete user '" + username + "'?");
+                if (result) {
+                    document.getElementById("deleteForm-" + username).submit();
+                }
+            }
+        }
+
+    </script>
+</head>
+<body>
+<nav th:replace="components/navigation"></nav>
+<h1>User List</h1>
+<ul>
+    <th:block th:each="user : ${users}">
+        <li>
+            <span th:text="${user.username} + (${user.admin} ? ' - ADMIN' : '')"></span>
+            <th:block th:if="${!user.admin}">
+                <form th:id="'deleteForm-' + ${user.username}" th:action="@{/deleteUser}" method="post">
+                    <input type="hidden" name="username" th:value="${user.username}" />
+                    <button type="button"
+                            onclick="confirmDelete(this.getAttribute('data-username'), this.getAttribute('data-admin'))"
+                            th:attr="data-username=${user.username}, data-admin=${user.isAdmin}">Delete</button>
+                </form>
+            </th:block>
+        </li>
+    </th:block>
+</ul>
+
+<a th:href="@{/signup}">
+    <button>Make New User</button>
+</a>
+</body>
+</body>
+</html>
