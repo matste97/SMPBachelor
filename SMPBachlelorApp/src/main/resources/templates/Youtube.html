@@ -1,8 +1,7 @@
 <!doctype html>
 <html lang="en">
-<script th:src="@{/js/test.js}"></script>
-<script th:src="@{/js/YoutubeChannelChart.js}"></script>
-<script th:src="@{/js/YoutubeVideoChart.js}"></script>
+<script th:src="@{/js/Navigation.js}"></script>
+<script th:src="@{/js/YoutubeCharts.js}"></script>
 <link rel="stylesheet" type="text/css" th:href="@{/styles/styles.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/styles/youtube.css}">
 <head>
@@ -64,9 +63,9 @@
   console.log('Channel Data All Time:', channelDataAllTime); // Log the JSON data
   console.log('Channel Data 30 Days:', channel30DaysData); // Log the JSON data
   console.log('Videos:', videosLatest); // Log the JSON data
-  createChart('channelChartAllTime', channelDataAllTime);
-  createChart('channelChart30Days', channel30DaysData);
-  generateCharts(videosLatest);
+  createChannelChart('channelChartAllTime', channelDataAllTime);
+  createChannelChart('channelChart30Days', channel30DaysData);
+  createVideoCharts(videosLatest);
   /*]]>*/
 </script>
 
