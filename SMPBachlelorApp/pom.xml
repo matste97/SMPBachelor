@@ -87,6 +87,9 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
+            <version>3.0.2</version>
+            <scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
         <!-- For Thymeleaf templates -->
         <dependency>
