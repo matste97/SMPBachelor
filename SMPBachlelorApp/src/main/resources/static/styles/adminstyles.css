@@ -1,0 +1,38 @@
+main{
+    width: 50%;
+    margin: 0 auto;
+}
+h1{
+    text-align: center;
+    margin: 0;
+    padding: 1em 0 1em 0;
+}
+#listUser{
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    padding: 1em 0 1em 0;
+    font-weight: bold;
+}
+#usersList{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+    padding:0;
+}
+a{
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+}
+button{
+    width: calc(100%);
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}

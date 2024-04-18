@@ -35,14 +35,6 @@ public class AuthenticationController {
         return "redirect:/";
     }
 
-    @GetMapping("/forgotPassword")
-    @Operation(
-            summary = "Show password reset form",
-            description = "Displays the password reset form"
-    )
-    public String resetPassword(Model model){return "reset-password";}
-
-
     /**
      * Sign-up form
      *
@@ -82,59 +74,4 @@ public class AuthenticationController {
         }
     }
 
-
-
-    /**
-     * Show profile page for a user
-     *
-     * @param model    Model for passing data to Thymeleaf
-     * @param username Username of the user
-     * @return
-     */
-
-    @GetMapping("users/{username}")
-    @Operation(
-            summary = "Show user profile",
-            description = "Displays the profile page for a user"
-    )
-    public String userPage(Model model, @PathVariable String username) {
-        return handleProfilePageRequest(username, model);
-    }
-
-    /**
-     * This method handles HTTP POST - user submits changes to his/her profile
-     *
-     * @param model    Model for passing data to Thymeleaf
-     * @param username Username of the user
-     * @return name of the Thymeleaf template to render the result
-     */
-    @PostMapping("users/{username}")
-    @Operation(
-            summary = "Update user profile",
-            description = "Handles HTTP POST - user submits changes to his/her profile"
-    )
-    public String userPagePost(@PathVariable String username, Model model) {
-        return handleProfilePageRequest(username, model);
-    }
-
-    /**
-     * Handler GET or POST request to the /users/{username} page. When the POST data is present,
-     * update user profile data. Also checks if we are accessing a page which is allowed for
-     * this user.
-     *
-     * @param username Username of the user profile to load
-     * @param model    The model to put successMessage or errorMessage in
-     * @return Name of the template to render: user on success, no-access if the request
-     * is unauthorized.
-     */
-
-    private String handleProfilePageRequest(String username, Model model) {
-        User authenticatedUser = userService.getSessionUser();
-        if (authenticatedUser != null && authenticatedUser.getUsername().equals(username)) {
-            model.addAttribute("user", authenticatedUser);
-            return "user";
-        } else {
-            return "no-access";
-        }
-    }
 }

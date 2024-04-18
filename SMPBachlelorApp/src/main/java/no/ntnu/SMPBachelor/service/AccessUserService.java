@@ -75,9 +75,9 @@ public class AccessUserService implements UserDetailsService {
     public String tryCreateNewUser(String username, String password) {
         String errorMessage;
         if ("".equals(username)) {
-            errorMessage = "Email can't be empty";
+            errorMessage = "Username can't be empty";
         } else if (userExists(username)) {
-            errorMessage = "Email already taken";
+            errorMessage = "Username already taken";
         } else {
             errorMessage = checkPasswordRequirements(password);
             if (errorMessage == null) {

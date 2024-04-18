@@ -9,6 +9,13 @@ main button{
     text-align: center;
     width: 20%;
     margin: 0 auto;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 main button .spinner {

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Admin Page</title>
     <link rel="stylesheet" type="text/css" th:href="@{/styles/styles.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/adminstyles.css}">
     <script th:src="@{/js/Navigation.js}"></script>
     <script th:inline="javascript">
         function confirmDelete(username, isAdmin) {
@@ -23,11 +24,15 @@
 </head>
 <body>
 <nav th:replace="components/navigation"></nav>
+<main>
+    <a th:href="@{/signup}">
+        <button id="newUserButton">Make New User</button>
+    </a>
 <h1>User List</h1>
-<ul>
+<ul id="usersList">
     <th:block th:each="user : ${users}">
-        <li>
-            <span th:text="${user.username} + (${user.admin} ? ' - ADMIN' : '')"></span>
+        <div id="listUser">
+            <span th:text="${user.username}"></span>
             <th:block th:if="${!user.admin}">
                 <form th:id="'deleteForm-' + ${user.username}" th:action="@{/deleteUser}" method="post">
                     <input type="hidden" name="username" th:value="${user.username}" />
@@ -36,13 +41,14 @@
                             th:attr="data-username=${user.username}, data-admin=${user.isAdmin}">Delete</button>
                 </form>
             </th:block>
-        </li>
+            <th:block th:if="${user.admin}">
+                <div>ADMIN</div>
+            </th:block>
+        </div>
     </th:block>
 </ul>
 
-<a th:href="@{/signup}">
-    <button>Make New User</button>
-</a>
-</body>
+
+</main>
 </body>
 </html>
