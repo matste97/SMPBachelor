@@ -15,12 +15,18 @@
     <form class="login-form" method="post" th:action="@{/signup}" th:object="${signupData}">
       <div class="input-group">
         <h2>Create an account</h2>
-        <label for="username" class="input-label">Username:</label>
-        <input class="text-input" id="username" name="username">
-        <label for="password" class="input-label">Password:</label>
-        <input type="password" id="password" name="password" class="text-input" >
-        <label for="repeat" class="input-label">Repeat password:</label>
-        <input type="password" id="repeat" name="repeat" class="text-input" >
+        <div class="input-group">
+          <label for="username" class="input-label">Username:</label>
+          <input class="text-input" id="username" name="username">
+        </div>
+        <div class="input-group">
+          <label for="password" class="input-label">Password:</label>
+          <input type="password" id="password" name="password" class="text-input" >
+        </div>
+        <div class="input-group">
+          <label for="repeat" class="input-label">Repeat password:</label>
+          <input type="password" id="repeat" name="repeat" class="text-input" >
+        </div>
         <br>
         <h3 th:if="${errorMessage != null}" class="alert" th:text="${errorMessage}"></h3>
         <button type="submit">SUBMIT</button>

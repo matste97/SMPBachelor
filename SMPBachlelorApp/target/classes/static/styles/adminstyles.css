@@ -27,7 +27,7 @@ a{
     text-decoration: none;
 }
 button{
-    width: calc(100%);
+    width: 100%;
     padding: 10px;
     background-color: #333;
     color: #fff;
