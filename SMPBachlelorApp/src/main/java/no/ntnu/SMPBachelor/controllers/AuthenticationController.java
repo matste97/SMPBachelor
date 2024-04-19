@@ -3,14 +3,12 @@ package no.ntnu.SMPBachelor.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.ntnu.SMPBachelor.dto.SignupDto;
-import no.ntnu.SMPBachelor.models.User;
 import no.ntnu.SMPBachelor.service.AccessUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @Tag(name = "AuthenticationController", description = "Takes care of user registration and authentication")
@@ -67,11 +65,11 @@ public class AuthenticationController {
         }
         String errorMessage = userService.tryCreateNewUser(signupData.getUsername(), signupData.getPassword());
         if (errorMessage == null) {
+            model.addAttribute("username", signupData.getUsername());
             return "signUpSuccess";
         } else {
             model.addAttribute("errorMessage", errorMessage);
             return "signUp";
         }
     }
-
 }

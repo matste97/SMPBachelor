@@ -140,5 +140,20 @@ public class AccessUserService implements UserDetailsService {
         userRepository.save(user);
         return true;
     }
+
+    public boolean changeUserPassword(String username, String newPassword) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            String errorMessage = checkPasswordRequirements(newPassword);
+            if (errorMessage == null) {
+                user.setPassword(createHash(newPassword));
+                userRepository.save(user);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 

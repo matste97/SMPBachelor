@@ -27,8 +27,7 @@
           <label for="repeat" class="input-label">Repeat password:</label>
           <input type="password" id="repeat" name="repeat" class="text-input" >
         </div>
-        <br>
-        <h3 th:if="${errorMessage != null}" class="alert" th:text="${errorMessage}"></h3>
+        <p th:if="${errorMessage != null}" id="alert" class="alert" th:text="${errorMessage}"></p>
         <button type="submit">SUBMIT</button>
       </div>
     </form>

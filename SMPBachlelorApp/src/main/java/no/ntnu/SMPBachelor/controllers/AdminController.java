@@ -3,6 +3,7 @@ package no.ntnu.SMPBachelor.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.ntnu.SMPBachelor.repositories.UserRepository;
+import no.ntnu.SMPBachelor.service.AccessUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AdminController {
 
     @Autowired
-    private UserRepository userRepository; // Assuming you have UserRepository autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AccessUserService accessUserService;
 
     @GetMapping("admin")
     @Operation(
@@ -34,6 +38,22 @@ public class AdminController {
     }
 
 
+    @PostMapping("/admin/change-user-password")
+    public String changeUserPassword(@RequestParam("username") String username,
+                                                @RequestParam("newPassword") String newPassword,Model model) {
+        if (accessUserService.changeUserPassword(username, newPassword)) {
+            model.addAttribute("username", username);
+            return "passwordChangeSuccess";
+        } else {
+            model.addAttribute("errorMessage", "Password must be at least 6 characters");
+            model.addAttribute("username", username);
+            return "adminPasswordChange";
+        }
+    }
 
-
+    @GetMapping("/admin/change-user-password")
+    public String showChangePasswordForm(@RequestParam("username") String username, Model model) {
+        model.addAttribute("username", username);
+        return "adminPasswordChange";
+    }
 }

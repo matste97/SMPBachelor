@@ -25,22 +25,29 @@
 <body>
 <nav th:replace="components/navigation"></nav>
 <main>
-    <a th:href="@{/signup}">
-        <button id="newUserButton">Make New User</button>
-    </a>
 <h1>User List</h1>
+    <a th:href="@{/signup}">
+        <button  id="newUserButton">Make New User</button>
+    </a>
 <ul id="usersList">
     <th:block th:each="user : ${users}">
         <div id="listUser">
-            <span th:text="${user.username}"></span>
+            <div class="username" th:text="${user.username}"></div>
             <th:block th:if="${!user.admin}">
+                <div class="button-container">
+                    <button>
+                        <a th:href="@{/admin/change-user-password(username=${user.username})}">Change Password</a>
+                    </button>
                 <form th:id="'deleteForm-' + ${user.username}" th:action="@{/deleteUser}" method="post">
                     <input type="hidden" name="username" th:value="${user.username}" />
                     <button type="button"
                             onclick="confirmDelete(this.getAttribute('data-username'), this.getAttribute('data-admin'))"
                             th:attr="data-username=${user.username}, data-admin=${user.isAdmin}">Delete</button>
                 </form>
+
+                </div>
             </th:block>
+
             <th:block th:if="${user.admin}">
                 <div>ADMIN</div>
             </th:block>

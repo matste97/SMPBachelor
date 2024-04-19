@@ -12,7 +12,7 @@
 <main>
   <div id="feedback-container">
     <h1>Sign up successful!</h1>
-    <p>The account has been created successfully.</p>
+    <div>The account <span style="font-weight: bold" th:text="${username}"></span>  has been created successfully.</div>
     <a th:href="@{/admin}">
       <button>Back to admin page</button>
     </a>

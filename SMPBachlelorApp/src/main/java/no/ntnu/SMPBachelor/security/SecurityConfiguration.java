@@ -55,6 +55,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/login").permitAll()
+                .requestMatchers("/admin/change-user-password/**").hasRole("ADMIN")
                 .requestMatchers("/youtube/**").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/tiktok/**").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/instagram/**").hasAnyRole("USER", "ADMIN")
@@ -72,9 +73,9 @@ public class SecurityConfiguration {
                 .requestMatchers("/styles/**").permitAll()
                 // /error is needed or else getting weird redirect on login, found solution here: https://github.com/spring-projects/spring-security/issues/12635#issuecomment-1429055478
                 .requestMatchers("/error").permitAll()
-                .and().formLogin().loginPage("/login")
-                .and().logout().logoutSuccessUrl("/")
-        ;
+                .and()
+                .formLogin().loginPage("/login")
+                .and().logout().logoutSuccessUrl("/");
         return http.build();
     }
 
