@@ -55,6 +55,9 @@ public class SecurityConfiguration {
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/login").permitAll()
+                .requestMatchers("/upload").permitAll() //TODO:FIX
+                .requestMatchers("/authorize").permitAll()
+                .requestMatchers("/Callback/**").permitAll()
                 .requestMatchers("/admin/change-user-password/**").hasRole("ADMIN")
                 .requestMatchers("/youtube/**").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/tiktok/**").hasAnyRole("USER", "ADMIN")

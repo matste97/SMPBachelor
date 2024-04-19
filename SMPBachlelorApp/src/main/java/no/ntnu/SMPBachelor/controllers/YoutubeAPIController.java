@@ -2,7 +2,10 @@ package no.ntnu.SMPBachelor.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
@@ -20,10 +23,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -34,49 +37,53 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
+import java.util.Stack;
 
 
 @Controller
 @Tag(name = "YoutubeAPIController", description = "Handles Youtube API")
 public class YoutubeAPIController {
+    private static final JacksonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final String EXTERNAL_JSON_DIRECTORY = Paths.get("").toAbsolutePath().getParent() + "\\Data\\Json\\";
+    private static final String TOKENS_DIRECTORY_PATH = Paths.get("").toAbsolutePath().getParent() + "\\Data\\tokens\\";
+    private static final String TOKEN_SECRETS_FILENAME = "token.json";
+
+    private static final Path tokenSecretsFilePath = Paths.get(TOKENS_DIRECTORY_PATH + TOKEN_SECRETS_FILENAME);
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private YouTubeAnalytics youtubeAnalyticsService;
-    private YouTube youtubeService;
+
     @GetMapping("/upload")
     public String showUploadForm(Model model) {
         return "uploadForm";
     }
     @PostMapping("/upload")
-    public void handleFileUpload(@RequestParam("file") MultipartFile file, HttpServletResponse response, Model model) {
+    public String handleFileUpload(@RequestParam("file") MultipartFile file, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         if (!file.isEmpty()) {
             try {
                 // Get the file and save it
                 byte[] bytes = file.getBytes();
                 Path path = Paths.get(EXTERNAL_JSON_DIRECTORY + "client_secrets.json");
                 Files.write(path, bytes);
-                YoutubeAuth youtubeAuth = new YoutubeAuth();
-                youtubeAuth.authorize(GoogleNetHttpTransport.newTrustedTransport());
-                this.youtubeAnalyticsService = youtubeAuth.getService();
-                this.youtubeService = youtubeAuth.getYouTubeService();
 
-            } catch (IOException | GeneralSecurityException e) {
+                // Redirect to the authorization endpoint after successful upload
+                return "redirect:/authorize";
+            } catch (IOException e) {
                 e.printStackTrace();
                 // Handle the exception
+                redirectAttributes.addFlashAttribute("error", "An error occurred while processing the file upload.");
             }
         } else {
-            model.addAttribute("message", "File is empty");
+            redirectAttributes.addFlashAttribute("message", "File is empty");
         }
+        // Redirect back to the upload page if there's an error or if the file is empty
+        return "redirect:/upload";
     }
 
 
     @GetMapping("/youtube")
     public String youtubePage(Model model) {
-        // Define file paths
         String channelDataAllTimePath = EXTERNAL_JSON_DIRECTORY + "/InfoChannelDemographicAllTime.json";
         String channel30DaysDataPath = EXTERNAL_JSON_DIRECTORY + "/InfoChannelDemographicLast30Days.json";
         String videosLatestPath = EXTERNAL_JSON_DIRECTORY + "/InfoLatestVideos.json";
@@ -91,11 +98,8 @@ public class YoutubeAPIController {
             model.addAttribute("channel30DaysData", channel30DaysDataJson);
             model.addAttribute("videosLatest", videosLatestJson);
         } catch (IOException e) {
-            // Handle file reading exception
             e.printStackTrace();
-            // You might want to add an error message to the model
             model.addAttribute("errorMessage", "Error reading JSON files");
-            // Return an error page or handle the error appropriately
             return "Youtube";
         }
 
@@ -106,23 +110,20 @@ public class YoutubeAPIController {
 
     @GetMapping("/updateJsonAndRefresh")
     @ResponseBody
-    public String updateJsonAndRefresh() throws IOException {
-        getChannelGenderAgeDemographicAllTime();
-        getChannelGenderAgeDemographicLast30Days();
-        saveLatestVideosInfoToJSON();
-
-        return "JSON files updated successfully";
+    public String updateJsonAndRefresh(Model model) {
+        try {
+            getChannelGenderAgeDemographicLast30Days();
+            saveLatestVideosInfoToJSON();
+            getChannelGenderAgeDemographicAllTime();
+            return "JSON files updated successfully";
+        } catch (IOException | GeneralSecurityException e) {
+            e.printStackTrace();
+            model.addAttribute("errorMessage", "Error occurred: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
 
-
-
-
-    public YoutubeAPIController() throws GeneralSecurityException, IOException {
-            YoutubeAuth youtubeAuth = new YoutubeAuth();
-            this.youtubeAnalyticsService = youtubeAuth.getService();
-            this.youtubeService = youtubeAuth.getYouTubeService();
-    }
 
     public void getChannelGenderAgeDemographicAllTime() throws IOException {
         LocalDate today = LocalDate.now();
@@ -138,8 +139,8 @@ public class YoutubeAPIController {
         json.put("DateTimeGathered", formattedDateTime);
         json.put("QueryStartTime", "2000-01-01");
         json.put("QueryEndTime", endDate);
-
-        YouTubeAnalytics.Reports.Query request = youtubeAnalyticsService.reports()
+        YouTubeAnalytics youTubeAnalytics = YoutubeAuth.getAnalyticsService();
+        YouTubeAnalytics.Reports.Query request = youTubeAnalytics.reports()
                 .query();
         QueryResponse response = request.setDimensions("channel")
                 .setIds("channel==MINE")
@@ -167,6 +168,7 @@ public class YoutubeAPIController {
         }
     }
 
+
     public void getChannelGenderAgeDemographicLast30Days() throws IOException {
 
         LocalDate endDate = LocalDate.now();
@@ -187,9 +189,10 @@ public class YoutubeAPIController {
         json.put("DateTimeGathered", formattedDateTime);
         json.put("QueryStartTime", formattedStartDate);
         json.put("QueryEndTime", formattedEndDate);
+        // Assuming you have obtained the credential through the authorization process
+        YouTubeAnalytics youTubeAnalyticsService = YoutubeAuth.getAnalyticsService();
 
-        YouTubeAnalytics.Reports.Query request = youtubeAnalyticsService.reports()
-                .query();
+        YouTubeAnalytics.Reports.Query request = youTubeAnalyticsService.reports().query();
         QueryResponse response = request.setDimensions("channel")
                 .setIds("channel==MINE")
                 .setMetrics("viewerPercentage")
@@ -216,13 +219,14 @@ public class YoutubeAPIController {
         }
     }
 
-    public List<String> getAllVideoIds() throws IOException {
+    public List<String> getAllVideoIds() throws IOException, GeneralSecurityException {
 
         List<String> videoIds = new ArrayList<>();
 
         String nextPageToken = "";
         while (nextPageToken != null) {
-            YouTube.Search.List request = youtubeService.search()
+            YouTube youTubeService = YoutubeAuth.getService();
+            YouTube.Search.List request = youTubeService.search()
                     .list("snippet")
                     .setForMine(true)
                     .setMaxResults(50L)  // Maximum number of results per page
@@ -242,11 +246,12 @@ public class YoutubeAPIController {
         return videoIds;
     }
 
-    public List<String> getLatestVideoIds() throws IOException {
+    public List<String> getLatestVideoIds() throws IOException, GeneralSecurityException {
 
         List<String> videoIds = new ArrayList<>();
 
-        YouTube.Search.List request = youtubeService.search()
+        YouTube youTubeService = YoutubeAuth.getService();
+        YouTube.Search.List request = youTubeService.search()
                 .list("snippet")
                 .setForMine(true)
                 .setMaxResults(5L) //amount of videos to get currently set to 2 during testing to save time
@@ -263,12 +268,13 @@ public class YoutubeAPIController {
         return videoIds;
     }
 
-    public JSONArray getVideoAgeAndGenderData(String videoId) throws IOException {
+    public JSONArray getVideoAgeAndGenderData(String videoId) throws IOException, GeneralSecurityException {
         // String message;
         JSONArray array = new JSONArray();
 
-        YouTubeAnalytics.Reports.Query request = youtubeAnalyticsService.reports()
-                .query();
+        YouTubeAnalytics youTubeAnalyticsService = YoutubeAuth.getAnalyticsService();
+
+        YouTubeAnalytics.Reports.Query request = youTubeAnalyticsService.reports().query();
         QueryResponse response = request.setDimensions("channel")
                 .setIds("channel==MINE")
                 .setStartDate("2012-05-09")
@@ -301,8 +307,9 @@ public class YoutubeAPIController {
         return array;
     }
 
-    public String getVideoTitle(String videoId) throws IOException {
-        return youtubeService.videos()
+    public String getVideoTitle(String videoId) throws IOException, GeneralSecurityException {
+        YouTube youTubeService = YoutubeAuth.getService();
+        return youTubeService.videos()
                 .list("snippet")
                 .setId(videoId)
                 .execute()
@@ -312,8 +319,9 @@ public class YoutubeAPIController {
                 .getTitle();
     }
 
-    public BigInteger getVideoTotalViews(String videoId) throws IOException {
-        return youtubeService.videos()
+    public BigInteger getVideoTotalViews(String videoId) throws IOException, GeneralSecurityException {
+        YouTube youTubeService = YoutubeAuth.getService();
+        return youTubeService.videos()
                 .list("statistics")
                 .setId(videoId)
                 .execute()
@@ -323,7 +331,7 @@ public class YoutubeAPIController {
                 .getViewCount();
 }
 
-    public void saveLatestVideosInfoToJSON() throws IOException {
+    public void saveLatestVideosInfoToJSON() throws IOException, GeneralSecurityException {
         String message;
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();
@@ -369,5 +377,27 @@ public class YoutubeAPIController {
             writer.writeValue(fileWriter, jsonObject);
             System.out.println("JSON object successfully saved to: " + filePath);
         }
+    }
+
+
+    @GetMapping("/authorize")
+    public RedirectView authorizeInBrowser() throws IOException {
+        if (YoutubeAuth.secretExists()) {
+            String authorizationUrl = YoutubeAuth.getAuthorizationUrl();
+            return new RedirectView(authorizationUrl);
+        } else {
+            // Redirect to upload if token doesn't exist
+            return new RedirectView("/upload");
+        }
+    }
+
+    @GetMapping("/Callback")
+    public String callback(@RequestParam("code") String code) throws IOException{
+        YoutubeAuth youtubeAuth = new YoutubeAuth();
+        Credential credential = youtubeAuth.authorize(code);
+
+        // Save obtained credentials for future use
+        youtubeAuth.saveCredentials(credential);
+        return "redirect:/";
     }
 }

@@ -1,80 +1,199 @@
 package no.ntnu.SMPBachelor.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.StoredCredential;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtubeAnalytics.v2.YouTubeAnalytics;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+
+import static java.nio.file.Files.exists;
 
 public class YoutubeAuth {
 
+
     private static final String EXTERNAL_JSON_DIRECTORY = Paths.get("").toAbsolutePath().getParent() + "\\Data\\Json\\";
     private static final String CLIENT_SECRETS_FILENAME = "client_secrets.json";
-    Path clientSecretsFilePath = Paths.get(EXTERNAL_JSON_DIRECTORY + CLIENT_SECRETS_FILENAME);
-    private static final Collection<String> SCOPES =
-            List.of("https://www.googleapis.com/auth/youtube.readonly");
-    private static final String TOKENS_DIRECTORY_PATH = Paths.get("").toAbsolutePath().getParent() + "\\Data\\tokens\\";
+    private static final Path clientSecretsFilePath = Paths.get(EXTERNAL_JSON_DIRECTORY + CLIENT_SECRETS_FILENAME);
     private static final String APPLICATION_NAME = "Your Application Name";
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static final String TOKENS_DIRECTORY_PATH = Paths.get("").toAbsolutePath().getParent() + "\\Data\\tokens\\";
+    private static final String TOKEN_SECRETS_FILENAME = "token.json";
 
-    public Credential authorize(final NetHttpTransport httpTransport) throws IOException {
-        // Load client secrets.
-        // Check if client_secrets.json exists
-        if (!Files.exists(clientSecretsFilePath)) {
-            System.out.println("Client secret required");
-            return null; // Return null if the file doesn't exist
+    private static final Path tokenSecretsFilePath = Paths.get(TOKENS_DIRECTORY_PATH + TOKEN_SECRETS_FILENAME);
+    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    private static final Collection<String> SCOPES = Arrays.asList(
+            "https://www.googleapis.com/auth/youtube.readonly",
+            "https://www.googleapis.com/auth/youtube.upload"
+    );
+    private static final NetHttpTransport httpTransport;
+    static {
+        try {
+            httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException("Failed to initialize HTTP transport", e);
+        }
+    }
+
+
+
+    /**
+     * Retrieves Google client secrets from a predefined resource file.
+     *
+     * @return GoogleClientSecrets containing the OAuth2 client configuration.
+     * @throws RuntimeException if there's an error loading the client secrets.
+     */
+    private static GoogleClientSecrets getSecrets() throws FileNotFoundException {
+        InputStream in = new FileInputStream(clientSecretsFilePath.toFile());
+        System.out.println(new InputStreamReader(in));
+        try {
+            return GoogleClientSecrets.load(
+                    JSON_FACTORY,
+                    new InputStreamReader(in)
+            );
+        } catch (IOException e) {
+            System.out.println("Error when trying to load google client secrets...");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Builds and configures an instance of GoogleAuthorizationCodeFlow.
+     *
+     * @param googleClientSecrets The GoogleClientSecrets to be used in the flow.
+     * @return An instance of GoogleAuthorizationCodeFlow for OAuth2 flow.
+     */
+    private static GoogleAuthorizationCodeFlow buildGoogleFlow(
+            GoogleClientSecrets googleClientSecrets
+    ) throws IOException {
+        FileDataStoreFactory dataStoreFactory = new FileDataStoreFactory(new File(TOKENS_DIRECTORY_PATH));
+        return new GoogleAuthorizationCodeFlow.Builder(
+                HTTP_TRANSPORT,
+                JSON_FACTORY,
+                googleClientSecrets,
+                SCOPES
+        ).setAccessType("offline")
+                .setDataStoreFactory(dataStoreFactory) // Set the data store factory
+                .build();
+    }
+
+    public static boolean secretExists() {
+        return exists(Paths.get(String.valueOf(clientSecretsFilePath)));
+    }
+
+    public static String getAuthorizationUrl() throws IOException {
+
+        GoogleClientSecrets googleClientSecrets = getSecrets();
+        GoogleAuthorizationCodeFlow codeFlow = buildGoogleFlow(googleClientSecrets);
+
+        System.out.println(googleClientSecrets.getDetails().getRedirectUris()
+                .get(0));
+
+        return codeFlow.newAuthorizationUrl()
+                .setRedirectUri(googleClientSecrets.getDetails().getRedirectUris()
+                        .get(0)).build();
+    }
+
+    public static Credential loadCredentials() throws IOException {
+        java.io.File file = new java.io.File(TOKENS_DIRECTORY_PATH, "token.json");
+        if (file.exists()) {
+            FileInputStream fis = new FileInputStream(file);
+            GoogleAuthorizationCodeFlow flow = buildGoogleFlow(getSecrets());
+            return flow.loadCredential("user_id");
+        }
+        return null;
+    }
+
+
+    public static void saveCredentials(Credential credential) {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(String.valueOf(tokenSecretsFilePath)))) {
+            outputStream.writeObject(credential.getAccessToken());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public Credential authorize(String code) throws IOException {
+        GoogleClientSecrets googleClientSecrets = getSecrets();
+        GoogleAuthorizationCodeFlow codeFlow = buildGoogleFlow(googleClientSecrets);
+
+        if (code != null) {
+            // Exchange authorization code for credentials
+            TokenResponse tokenResponse = codeFlow.newTokenRequest(code)
+                    .setRedirectUri(googleClientSecrets.getDetails().getRedirectUris().get(0))
+                    .execute();
+
+            // Store the credential
+            Credential credential = codeFlow.createAndStoreCredential(tokenResponse, "user_id");
+            return credential;
+        } else {
+            // Load stored credential
+            return loadCredentials();
+        }
+    }
+
+
+
+
+
+    public static YouTube getService() throws IOException {
+        Credential credential =  YoutubeAuth.loadCredentials();
+        if (credential == null) {
+            throw new IllegalStateException("Authorization required.");
         }
 
-        // Load client secrets from file
-        try (InputStream in = new FileInputStream(clientSecretsFilePath.toFile())) {
-
-        GoogleClientSecrets clientSecrets =
-                GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-
-        // Set up token store
-        FileDataStoreFactory dataStoreFactory = new FileDataStoreFactory(new File(TOKENS_DIRECTORY_PATH));
-
-        // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow =
-                new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
-                        .setDataStoreFactory(dataStoreFactory)
-                        .setAccessType("offline")
-                        .build();
-
-        return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver.Builder().setPort(8081).build())
-                .authorize("user");
-    }}
-
-    public YouTube getYouTubeService() throws GeneralSecurityException, IOException {
-        final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        Credential credential = authorize(httpTransport);
+        if (credential.getExpiresInSeconds() <= 0) {
+            credential.refreshToken();
+            YoutubeAuth.saveCredentials(credential);
+        }
         return new YouTube.Builder(httpTransport, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
-
     }
 
-    public YouTubeAnalytics getService() throws GeneralSecurityException, IOException {
-        final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        Credential credential = authorize(httpTransport);
-        return new YouTubeAnalytics.Builder(httpTransport, JSON_FACTORY, credential)
-                .setApplicationName(APPLICATION_NAME)
-                .build();
+    public static YouTubeAnalytics getAnalyticsService() throws IOException {
+        try {
+            // Load credentials
+            Credential credential = YoutubeAuth.loadCredentials();
+
+            // Check if the credential has expired
+            if (credential.getExpiresInSeconds() <= 0) {
+                credential.refreshToken();
+                YoutubeAuth.saveCredentials(credential);
+            }
+
+            // Build and return the YouTubeAnalytics service
+            return new YouTubeAnalytics.Builder(httpTransport, JSON_FACTORY, credential)
+                    .setApplicationName(APPLICATION_NAME)
+                    .build();
+        } catch (IOException e) {
+            // Handle IOException here
+            e.printStackTrace();
+            // You can throw a new IOException, wrap it in another type of exception, or return null
+            throw new IOException("Error getting YouTube Analytics service: " + e.getMessage());
+        }
     }
+
+
 }

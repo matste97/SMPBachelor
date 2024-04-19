@@ -18,6 +18,10 @@ main button{
     transition: background-color 0.3s ease;
 }
 
+main button:hover {
+    background-color: #555;
+}
+
 main button .spinner {
     margin: 0 auto;
 }
