@@ -1,33 +1,153 @@
 {
   "1" : {
-    "videoDemographic" : [ ],
+    "videoDemographic" : [{
+        "gender" : "male",
+        "ageGroup" : "age13-17",
+        "viewerPercentage" : 25
+      }, {
+        "gender" : "male",
+        "ageGroup" : "age18-24",
+        "viewerPercentage" : 15
+      }, {
+        "gender" : "male",
+        "ageGroup" : "age25-34",
+        "viewerPercentage" : 10
+      },{
+        "gender" : "female",
+        "ageGroup" : "age13-17",
+        "viewerPercentage" : 30
+      }, {
+        "gender" : "female",
+        "ageGroup" : "age18-24",
+        "viewerPercentage" : 15
+      }, {
+        "gender" : "female",
+        "ageGroup" : "age25-34",
+        "viewerPercentage" : 5
+      }],
     "totalVideoViews" : 3,
     "videoId" : "2G-lDVDic90",
     "videoTitle" : "We are trying to have a conversation here"
   },
   "2" : {
-    "videoDemographic" : [ ],
+    "videoDemographic" : [{
+      "gender" : "male",
+      "ageGroup" : "age13-17",
+      "viewerPercentage" : 25
+    }, {
+      "gender" : "male",
+      "ageGroup" : "age18-24",
+      "viewerPercentage" : 15
+    }, {
+      "gender" : "male",
+      "ageGroup" : "age25-34",
+      "viewerPercentage" : 10
+    },{
+      "gender" : "female",
+      "ageGroup" : "age13-17",
+      "viewerPercentage" : 30
+    }, {
+      "gender" : "female",
+      "ageGroup" : "age18-24",
+      "viewerPercentage" : 15
+    }, {
+      "gender" : "female",
+      "ageGroup" : "age25-34",
+      "viewerPercentage" : 5
+    }],
     "totalVideoViews" : 0,
     "videoId" : "pJSAVo3EFa4",
     "videoTitle" : "My Broadcast"
   },
   "3" : {
-    "videoDemographic" : [ ],
+    "videoDemographic" : [{
+      "gender" : "male",
+      "ageGroup" : "age13-17",
+      "viewerPercentage" : 25
+    }, {
+      "gender" : "male",
+      "ageGroup" : "age18-24",
+      "viewerPercentage" : 15
+    }, {
+      "gender" : "male",
+      "ageGroup" : "age25-34",
+      "viewerPercentage" : 10
+    },{
+      "gender" : "female",
+      "ageGroup" : "age13-17",
+      "viewerPercentage" : 30
+    }, {
+      "gender" : "female",
+      "ageGroup" : "age18-24",
+      "viewerPercentage" : 15
+    }, {
+      "gender" : "female",
+      "ageGroup" : "age25-34",
+      "viewerPercentage" : 5
+    }],
     "totalVideoViews" : 0,
     "videoId" : "S8mrj3o85Yk",
     "videoTitle" : "My Broadcast"
   },
   "4" : {
-    "videoDemographic" : [ ],
+    "videoDemographic" : [{
+      "gender" : "male",
+      "ageGroup" : "age13-17",
+      "viewerPercentage" : 25
+    }, {
+      "gender" : "male",
+      "ageGroup" : "age18-24",
+      "viewerPercentage" : 15
+    }, {
+      "gender" : "male",
+      "ageGroup" : "age25-34",
+      "viewerPercentage" : 10
+    },{
+      "gender" : "female",
+      "ageGroup" : "age13-17",
+      "viewerPercentage" : 30
+    }, {
+      "gender" : "female",
+      "ageGroup" : "age18-24",
+      "viewerPercentage" : 15
+    }, {
+      "gender" : "female",
+      "ageGroup" : "age25-34",
+      "viewerPercentage" : 5
+    }],
     "totalVideoViews" : 1,
     "videoId" : "KB-nyB9LGOw",
     "videoTitle" : "EarlyLegendary #short"
   },
   "5" : {
-    "videoDemographic" : [ ],
+    "videoDemographic" : [{
+      "gender" : "male",
+      "ageGroup" : "age13-17",
+      "viewerPercentage" : 25
+    }, {
+      "gender" : "male",
+      "ageGroup" : "age18-24",
+      "viewerPercentage" : 15
+    }, {
+      "gender" : "male",
+      "ageGroup" : "age25-34",
+      "viewerPercentage" : 10
+    },{
+      "gender" : "female",
+      "ageGroup" : "age13-17",
+      "viewerPercentage" : 30
+    }, {
+      "gender" : "female",
+      "ageGroup" : "age18-24",
+      "viewerPercentage" : 15
+    }, {
+      "gender" : "female",
+      "ageGroup" : "age25-34",
+      "viewerPercentage" : 5
+    }],
     "totalVideoViews" : 0,
     "videoId" : "XcX9UP0KqiI",
     "videoTitle" : "test new settings"
   },
-  "DateTimeGathered" : "2024-04-20 01:51:17"
+  "DateTimeGathered" : "2024-04-22 15:54:32"
 }

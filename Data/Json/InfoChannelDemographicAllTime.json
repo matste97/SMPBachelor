@@ -1,18 +1,30 @@
 {
-  "QueryEndTime" : "2024-04-20",
+  "QueryEndTime" : "2024-04-22",
   "QueryStartTime" : "2000-01-01",
-  "DateTimeGathered" : "2024-04-20 01:51:24",
+  "DateTimeGathered" : "2024-04-22 15:55:04",
   "channelDemographic" : [ {
     "gender" : "male",
     "ageGroup" : "age13-17",
-    "viewerPercentage" : 28.6
+    "viewerPercentage" : 25
   }, {
     "gender" : "male",
     "ageGroup" : "age18-24",
-    "viewerPercentage" : 36.9
+    "viewerPercentage" : 15
   }, {
     "gender" : "male",
     "ageGroup" : "age25-34",
-    "viewerPercentage" : 34.5
+    "viewerPercentage" : 10
+  },{
+    "gender" : "female",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 30
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 15
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 5
   } ]
 }

@@ -64,7 +64,6 @@ public class YoutubeAuth {
      */
     private static GoogleClientSecrets getSecrets() throws FileNotFoundException {
         InputStream in = new FileInputStream(clientSecretsFilePath.toFile());
-        System.out.println(new InputStreamReader(in));
         try {
             return GoogleClientSecrets.load(
                     JSON_FACTORY,
@@ -104,10 +103,6 @@ public class YoutubeAuth {
 
         GoogleClientSecrets googleClientSecrets = getSecrets();
         GoogleAuthorizationCodeFlow codeFlow = buildGoogleFlow(googleClientSecrets);
-
-        System.out.println(googleClientSecrets.getDetails().getRedirectUris()
-                .get(0));
-
         return codeFlow.newAuthorizationUrl()
                 .setRedirectUri(googleClientSecrets.getDetails().getRedirectUris()
                         .get(0)).build();
@@ -164,6 +159,7 @@ public class YoutubeAuth {
         }
 
         if (credential.getExpiresInSeconds() <= 0) {
+            System.out.println("HERE EXPIRE RUNS");
             credential.refreshToken();
             YoutubeAuth.saveCredentials(credential);
         }
@@ -173,11 +169,16 @@ public class YoutubeAuth {
     }
 
     public static YouTubeAnalytics getAnalyticsService() throws IOException {
-        try {
+
             // Load credentials
             Credential credential = YoutubeAuth.loadCredentials();
+        if (credential == null) {
+            throw new IllegalStateException("Authorization required.");
+        }
 
-            // Check if the credential has expired
+
+
+
             if (credential.getExpiresInSeconds() <= 0) {
                 credential.refreshToken();
                 YoutubeAuth.saveCredentials(credential);
@@ -187,13 +188,8 @@ public class YoutubeAuth {
             return new YouTubeAnalytics.Builder(httpTransport, JSON_FACTORY, credential)
                     .setApplicationName(APPLICATION_NAME)
                     .build();
-        } catch (IOException e) {
-            // Handle IOException here
-            e.printStackTrace();
-            // You can throw a new IOException, wrap it in another type of exception, or return null
-            throw new IOException("Error getting YouTube Analytics service: " + e.getMessage());
         }
     }
 
 
-}
+

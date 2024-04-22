@@ -121,6 +121,7 @@ function createChannelChart(containerId, channelData) {
     var maleData = [];
     var femaleData = [];
 
+
     // Prepare data for chart
     if (data.length > 0) {
         data.forEach(function (demographic) {
@@ -141,7 +142,6 @@ function createChannelChart(containerId, channelData) {
         maleData.push(0);
         femaleData.push(0);
     }
-
 
     // Create Chart
     new Chart(ctx, {
@@ -185,4 +185,125 @@ function createChannelChart(containerId, channelData) {
     });
 }
 
+
+function createVideoPieCharts(jsonData) {
+    var data = JSON.parse(jsonData);
+    var container = document.getElementById('VideosChartContainer');
+
+    for (var key in data) {
+        if (key !== "DateTimeGathered") {
+            var videoData = data[key];
+            var individualChartContainer = document.createElement('div');
+            individualChartContainer.className = 'video-chart-container';
+
+            if (videoData && videoData.videoTitle !== undefined) {
+                var titleAndViewsContainer = document.createElement('div');
+                titleAndViewsContainer.className = 'title-views-container';
+                individualChartContainer.appendChild(titleAndViewsContainer);
+
+                var chartTitle = document.createElement('h2');
+                var chartViews = document.createElement('p');
+                chartTitle.className = 'chart-title';
+                chartViews.className = 'chart-views'; // Fixed: Changed class assignment here
+                chartTitle.textContent = videoData.videoTitle;
+                chartViews.textContent = 'Total Views: ' + videoData.totalVideoViews;
+                titleAndViewsContainer.appendChild(chartTitle);
+                titleAndViewsContainer.appendChild(chartViews);
+
+                var canvas = document.createElement('canvas');
+                canvas.width = 400;
+                canvas.height = 400;
+                canvas.id = 'viewerChart_' + key;
+                individualChartContainer.appendChild(canvas);
+                container.appendChild(individualChartContainer);
+
+                var datetimeInfo = document.createElement('div');
+                datetimeInfo.innerHTML = "Data gathered at: " + data.DateTimeGathered;
+                individualChartContainer.appendChild(datetimeInfo);
+
+                var labels = [];
+                var chartData = [];
+                var backgroundColors = [];
+                var index = 1;
+
+                if (videoData.videoDemographic.length > 0) {
+
+                    videoData.videoDemographic.forEach(function(demographic) {
+                        var label = demographic.gender + " " + demographic.ageGroup;
+                        if (!labels.includes(label)) {
+                            labels.push(label);
+                        }
+                        chartData.push(demographic.viewerPercentage);
+                        backgroundColors.push(selectColor(index));
+                        index++;
+                    });
+                } else {
+                    labels.push("No demographic data");
+                    chartData.push(0);
+                }
+
+                var ctx = canvas.getContext('2d');
+                new Chart(ctx, {
+                    type: 'pie', // Changed chart type to pie
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: chartData,
+                            backgroundColor: backgroundColors,
+                            borderColor: 'rgba(0, 0, 0, 1)', // black border to more easily tell slices apart from each other
+                            borderWidth: 1}]
+                    },
+                });
+            } else {
+                console.log('Error: Invalid video data for key:', key);
+            }
+        }
+    }
+}
+
+function createChannelPieChart(containerId, channelData) {
+    var data = JSON.parse(channelData).channelDemographic;
+    var ctx = document.getElementById(containerId).getContext('2d');
+    var labels = [];
+    var chartData = [];
+    var backgroundColors = [];
+    var index = 1;
+
+    if (data.length > 0) {
+        data.forEach(function (demographic) {
+            var label = demographic.gender + " " + demographic.ageGroup;
+            if (!labels.includes(label)) {
+                labels.push(label);
+            }
+            chartData.push(demographic.viewerPercentage);
+
+            data.push(demographic.viewerPercentage);
+            // Generate colors based on the viewer percentage
+            backgroundColors.push(selectColor(index));
+            index++;
+        });
+    } else {
+        labels.push("No demographic data");
+        chartData.push(0);
+    }
+
+    new Chart(ctx, {
+        type: 'pie', // Changed chart type to pie
+        data: {
+            labels: labels,
+            datasets: [{
+                data: chartData,
+                backgroundColor: backgroundColors,
+                borderColor: 'rgba(0, 0, 0, 1)', // black border to more easily tell slices apart from each other
+                borderWidth: 1}]
+        }
+    });
+}
+
+
+// Function to generate a color based on the number
+function selectColor(number) {
+    const hue = number * 137.508; // use golden angle approximation
+    return `hsl(${hue},50%,75%)`;
+}
 
