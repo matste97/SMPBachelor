@@ -363,7 +363,7 @@ public class YoutubeAPIController {
         }
 
         // Write JSON object to file
-        String filePath = EXTERNAL_JSON_DIRECTORY + fileName + ".json";
+        String filePath = EXTERNAL_JSON_DIRECTORY + File.separator + fileName + ".json";
         try (FileWriter fileWriter = new FileWriter(filePath)) {
             ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
             writer.writeValue(fileWriter, jsonObject);
