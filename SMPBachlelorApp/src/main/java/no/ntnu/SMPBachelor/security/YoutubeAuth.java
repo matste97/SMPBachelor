@@ -27,12 +27,12 @@ public class YoutubeAuth {
 
     private static final String EXTERNAL_JSON_DIRECTORY = Paths.get("").toAbsolutePath().getParent() + File.separator +  "Data" + File.separator + "Json";;
     private static final String CLIENT_SECRETS_FILENAME = "client_secrets.json";
-    private static final Path clientSecretsFilePath = Paths.get(EXTERNAL_JSON_DIRECTORY + CLIENT_SECRETS_FILENAME);
+    private static final Path clientSecretsFilePath = Paths.get(EXTERNAL_JSON_DIRECTORY + File.separator +  CLIENT_SECRETS_FILENAME);
     private static final String APPLICATION_NAME = "Your Application Name";
     private static final String TOKENS_DIRECTORY_PATH = Paths.get("").toAbsolutePath().getParent() + File.separator +  "Data" + File.separator + "tokens";;
     private static final String TOKEN_SECRETS_FILENAME = "token.json";
 
-    private static final Path tokenSecretsFilePath = Paths.get(TOKENS_DIRECTORY_PATH + TOKEN_SECRETS_FILENAME);
+    private static final Path tokenSecretsFilePath = Paths.get(TOKENS_DIRECTORY_PATH + File.separator +  TOKEN_SECRETS_FILENAME);
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final Collection<String> SCOPES = Arrays.asList(
@@ -90,7 +90,9 @@ public class YoutubeAuth {
     }
 
     public static boolean secretExists() {
+        System.out.println(Paths.get(String.valueOf(clientSecretsFilePath)));
         return exists(Paths.get(String.valueOf(clientSecretsFilePath)));
+
     }
 
     public static String getAuthorizationUrl() throws IOException {
