@@ -51,8 +51,6 @@
       <option value="pie">Pie Chart</option>
     </select>
   </div>
-
-  <body>
 <div id="ChannelChartsContainer">
   <div id="AllTimeContainer" class="channel-chart">
     <h2>Channel demographic All Time</h2>
@@ -65,7 +63,8 @@
 </div>
   <h1>Latest Videos</h1>
 <div id="VideosChartContainer"></div>
-
+</main>
+</body>
 
 <script th:inline="javascript">
   /*<![CDATA[*/
@@ -87,9 +86,12 @@
     var chartType = $(this).val(); // Get selected chart type from the dropdown
 
     // need to destroy exsisting to add new ones
-    $('#channelChartAllTime').remove();
-    $('#channelChart30Days').remove();
+    $('.channel-chart').remove();
     $('.video-chart-container').remove();
+    $('#ChannelChartsContainer').append('<div id="AllTimeContainer" class="channel-chart">');
+    $('#ChannelChartsContainer').append('<div id="30DayContainer" class="channel-chart">');
+    $('#AllTimeContainer').append('<h2>Channel demographic All Time</h2>');
+    $('#30DayContainer').append('<h2>Channel demographic Last 30 days</h2>');
     $('#AllTimeContainer').append('<canvas id="channelChartAllTime" width="400" height="400"></canvas>');
     $('#30DayContainer').append('<canvas id="channelChart30Days" width="400" height="400"></canvas>');
 
@@ -140,6 +142,5 @@
 
 
 
-</main>
-</body>
+
 </html>

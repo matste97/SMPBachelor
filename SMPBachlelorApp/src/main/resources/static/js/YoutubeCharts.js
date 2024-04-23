@@ -116,7 +116,8 @@ function createVideoCharts(jsonData) {
 
 function createChannelChart(containerId, channelData) {
     var data = JSON.parse(channelData).channelDemographic;
-    var ctx = document.getElementById(containerId).getContext('2d');
+    var container = document.getElementById(containerId);
+    var ctx = container.getContext('2d');
     var labels = [];
     var maleData = [];
     var femaleData = [];
@@ -183,6 +184,9 @@ function createChannelChart(containerId, channelData) {
             }
         }
     });
+    var datetimeInfo = document.createElement('div');
+    datetimeInfo.innerHTML = "Data gathered at: " + JSON.parse(channelData).DateTimeGathered;
+    container.parentNode.appendChild(datetimeInfo);
 }
 
 
@@ -234,7 +238,7 @@ function createVideoPieCharts(jsonData) {
                             labels.push(label);
                         }
                         chartData.push(demographic.viewerPercentage);
-                        backgroundColors.push(selectColor(index));
+                        backgroundColors.push(selectColor(index*3));
                         index++;
                     });
                 } else {
@@ -263,7 +267,8 @@ function createVideoPieCharts(jsonData) {
 
 function createChannelPieChart(containerId, channelData) {
     var data = JSON.parse(channelData).channelDemographic;
-    var ctx = document.getElementById(containerId).getContext('2d');
+    var container = document.getElementById(containerId);
+    var ctx = container.getContext('2d');
     var labels = [];
     var chartData = [];
     var backgroundColors = [];
@@ -278,8 +283,7 @@ function createChannelPieChart(containerId, channelData) {
             chartData.push(demographic.viewerPercentage);
 
             data.push(demographic.viewerPercentage);
-            // Generate colors based on the viewer percentage
-            backgroundColors.push(selectColor(index));
+            backgroundColors.push(selectColor(index*3));
             index++;
         });
     } else {
@@ -298,6 +302,9 @@ function createChannelPieChart(containerId, channelData) {
                 borderWidth: 1}]
         }
     });
+    var datetimeInfo = document.createElement('div');
+    datetimeInfo.innerHTML = "Data gathered at: " + JSON.parse(channelData).DateTimeGathered;
+    container.parentNode.appendChild(datetimeInfo);
 }
 
 

@@ -3,16 +3,12 @@ package no.ntnu.SMPBachelor.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtubeAnalytics.v2.YouTubeAnalytics;
 import com.google.api.services.youtubeAnalytics.v2.model.QueryResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import no.ntnu.SMPBachelor.security.YoutubeAuth;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -38,28 +36,21 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 
 @Controller
 @Tag(name = "YoutubeAPIController", description = "Handles Youtube API")
 public class YoutubeAPIController {
-    private static final JacksonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final String EXTERNAL_JSON_DIRECTORY = Paths.get("").toAbsolutePath().getParent() + "\\Data\\Json\\";
-    private static final String TOKENS_DIRECTORY_PATH = Paths.get("").toAbsolutePath().getParent() + "\\Data\\tokens\\";
-    private static final String TOKEN_SECRETS_FILENAME = "token.json";
-
-    private static final Path tokenSecretsFilePath = Paths.get(TOKENS_DIRECTORY_PATH + TOKEN_SECRETS_FILENAME);
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @GetMapping("/upload")
-    public String showUploadForm(Model model) {
+    public String showUploadForm() {
         return "uploadForm";
     }
     @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         if (!file.isEmpty()) {
             try {
                 // Get the file and save it
@@ -196,8 +187,8 @@ public class YoutubeAPIController {
         QueryResponse response = request.setDimensions("channel")
                 .setIds("channel==MINE")
                 .setMetrics("viewerPercentage")
-                .setStartDate(formattedStartDate)  // Start date in the past
-                .setEndDate(formattedEndDate)
+                .setStartDate(formattedStartDate)  // Start date 30 days in the past
+                .setEndDate(formattedEndDate) //end date today
                 .setDimensions("ageGroup,gender")
                 .execute();
         List<List<Object>> rows = response.getRows();
@@ -246,7 +237,7 @@ public class YoutubeAPIController {
         return videoIds;
     }
 
-    public List<String> getLatestVideoIds() throws IOException, GeneralSecurityException {
+    public List<String> getLatestVideoIds() throws IOException{
 
         List<String> videoIds = new ArrayList<>();
 
@@ -254,7 +245,7 @@ public class YoutubeAPIController {
         YouTube.Search.List request = youTubeService.search()
                 .list("snippet")
                 .setForMine(true)
-                .setMaxResults(5L) //amount of videos to get currently set to 2 during testing to save time
+                .setMaxResults(5L) //amount of videos to get currently set to 5 during testing to save time
                 .setType("video")
                 .setOrder("date");
 
@@ -268,8 +259,12 @@ public class YoutubeAPIController {
         return videoIds;
     }
 
-    public JSONArray getVideoAgeAndGenderData(String videoId) throws IOException, GeneralSecurityException {
-        // String message;
+    public JSONArray getVideoAgeAndGenderData(String videoId) throws IOException {
+        LocalDate endDate = LocalDate.now();
+        // Format dates to match the required format for the query
+        DateTimeFormatter formatterQuery = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedEndDate = endDate.format(formatterQuery);
+
         JSONArray array = new JSONArray();
 
         YouTubeAnalytics youTubeAnalyticsService = YoutubeAuth.getAnalyticsService();
@@ -277,8 +272,8 @@ public class YoutubeAPIController {
         YouTubeAnalytics.Reports.Query request = youTubeAnalyticsService.reports().query();
         QueryResponse response = request.setDimensions("channel")
                 .setIds("channel==MINE")
-                .setStartDate("2012-05-09")
-                .setEndDate("2023-05-09") //TODO: GET TIME DATE PROPERLY INSTEAD OF HARD CODED
+                .setStartDate("2000-01-01") //all time by setting date way in the past
+                .setEndDate(formattedEndDate)
                 .setMetrics("viewerPercentage")
                 .setDimensions("ageGroup,gender")
                 .setFilters("video==" + videoId)
@@ -287,7 +282,6 @@ public class YoutubeAPIController {
 
         if (rows != null) {
             for (List<Object> row : rows) {
-                // Assuming date is the first element in each row
                 String ageGroup = (String) row.get(0);
                 String gender = (String) row.get(1);
                 BigDecimal viewerPercentage = (BigDecimal) row.get(2);
@@ -295,11 +289,9 @@ public class YoutubeAPIController {
                 JSONObject item = new JSONObject();
                 item.put("Age Group", ageGroup);
                 item.put("Gender", gender);
-                item.put("Viewer Precentage", viewerPercentage);
+                item.put("Viewer Percentage", viewerPercentage);
                 array.add(item);
             }
-        //    message = array.toJSONString();
-        //    System.out.print(message);
             return array;
         }
 
@@ -307,7 +299,7 @@ public class YoutubeAPIController {
         return array;
     }
 
-    public String getVideoTitle(String videoId) throws IOException, GeneralSecurityException {
+    public String getVideoTitle(String videoId) throws IOException{
         YouTube youTubeService = YoutubeAuth.getService();
         return youTubeService.videos()
                 .list("snippet")
@@ -319,7 +311,7 @@ public class YoutubeAPIController {
                 .getTitle();
     }
 
-    public BigInteger getVideoTotalViews(String videoId) throws IOException, GeneralSecurityException {
+    public BigInteger getVideoTotalViews(String videoId) throws IOException{
         YouTube youTubeService = YoutubeAuth.getService();
         return youTubeService.videos()
                 .list("statistics")
@@ -332,7 +324,6 @@ public class YoutubeAPIController {
 }
 
     public void saveLatestVideosInfoToJSON() throws IOException, GeneralSecurityException {
-        String message;
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();
         LocalDateTime currentTime = LocalDateTime.now();

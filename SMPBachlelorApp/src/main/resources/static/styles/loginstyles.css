@@ -75,12 +75,16 @@ p a:hover {
 }
 
 .logo-container {
-    text-align: center;
-    margin-top: 10px;
+
+    height: auto;
 }
 
 .logo-container img {
-    max-width: 200px;
+    max-width: 100%;
 }
 
-
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+}

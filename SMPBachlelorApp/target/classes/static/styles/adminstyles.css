@@ -1,5 +1,5 @@
 main{
-    width: 50%;
+    max-width: 80%;
     margin: 0 auto;
 }
 h1{
@@ -39,6 +39,10 @@ button{
     text-align: center;
 }
 
+.delete-button{
+    background-color: #993434;
+}
+
 #newUserButton{
    margin-left: 0;
 }
@@ -71,4 +75,6 @@ button{
 .username{
     align-content: center;
 }
+
+
 

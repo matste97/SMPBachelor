@@ -22,7 +22,7 @@ public class UserSessionInterceptor implements HandlerInterceptor {
      */
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView){
         if (modelAndView != null) {
             modelAndView.addObject("user", userService.getSessionUser());
         }

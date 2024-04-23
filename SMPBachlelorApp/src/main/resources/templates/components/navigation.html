@@ -17,8 +17,12 @@
        <a th:href="@{/logout}">Log Out</a>
       </th:block>
     </div>
+
   </div>
 
 
   <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
+  <th:block th:if="${user != null}" >
+    <h3 th:text="'Logged in as: ' + ${user.username}"></h3>
+  </th:block>
 </nav>

@@ -40,7 +40,7 @@
                     </button>
                 <form th:id="'deleteForm-' + ${user.username}" th:action="@{/deleteUser}" method="post">
                     <input type="hidden" name="username" th:value="${user.username}" />
-                    <button type="button"
+                    <button type="button" class="delete-button"
                             onclick="confirmDelete(this.getAttribute('data-username'), this.getAttribute('data-admin'))"
                             th:attr="data-username=${user.username}, data-admin=${user.isAdmin}">Delete</button>
                 </form>
