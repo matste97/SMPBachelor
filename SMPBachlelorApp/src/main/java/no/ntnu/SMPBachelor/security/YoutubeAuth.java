@@ -25,11 +25,11 @@ import static java.nio.file.Files.exists;
 public class YoutubeAuth {
 
 
-    private static final String EXTERNAL_JSON_DIRECTORY = Paths.get("").toAbsolutePath().getParent() + "\\Data\\Json\\";
+    private static final String EXTERNAL_JSON_DIRECTORY = Paths.get("").toAbsolutePath().getParent() + File.separator +  "Data" + File.separator + "Json";;
     private static final String CLIENT_SECRETS_FILENAME = "client_secrets.json";
     private static final Path clientSecretsFilePath = Paths.get(EXTERNAL_JSON_DIRECTORY + CLIENT_SECRETS_FILENAME);
     private static final String APPLICATION_NAME = "Your Application Name";
-    private static final String TOKENS_DIRECTORY_PATH = Paths.get("").toAbsolutePath().getParent() + "\\Data\\tokens\\";
+    private static final String TOKENS_DIRECTORY_PATH = Paths.get("").toAbsolutePath().getParent() + File.separator +  "Data" + File.separator + "tokens";;
     private static final String TOKEN_SECRETS_FILENAME = "token.json";
 
     private static final Path tokenSecretsFilePath = Paths.get(TOKENS_DIRECTORY_PATH + TOKEN_SECRETS_FILENAME);
