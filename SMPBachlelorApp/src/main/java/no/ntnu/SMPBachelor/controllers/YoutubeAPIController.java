@@ -41,7 +41,7 @@ import java.util.List;
 @Controller
 @Tag(name = "YoutubeAPIController", description = "Handles Youtube API")
 public class YoutubeAPIController {
-    private static final String EXTERNAL_JSON_DIRECTORY = Paths.get("").toAbsolutePath().getParent() + "\\Data\\Json\\";
+    private static final String EXTERNAL_JSON_DIRECTORY = Paths.get("").toAbsolutePath().getParent() + File.separator + "Data" + File.separator + "Json";
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -55,7 +55,7 @@ public class YoutubeAPIController {
             try {
                 // Get the file and save it
                 byte[] bytes = file.getBytes();
-                Path path = Paths.get(EXTERNAL_JSON_DIRECTORY + "client_secrets.json");
+                Path path = Paths.get(EXTERNAL_JSON_DIRECTORY + File.separator +  "client_secrets.json");
                 Files.write(path, bytes);
 
                 // Redirect to the authorization endpoint after successful upload
@@ -75,9 +75,10 @@ public class YoutubeAPIController {
 
     @GetMapping("/youtube")
     public String youtubePage(Model model) {
-        String channelDataAllTimePath = EXTERNAL_JSON_DIRECTORY + "/InfoChannelDemographicAllTime.json";
-        String channel30DaysDataPath = EXTERNAL_JSON_DIRECTORY + "/InfoChannelDemographicLast30Days.json";
-        String videosLatestPath = EXTERNAL_JSON_DIRECTORY + "/InfoLatestVideos.json";
+
+        String channelDataAllTimePath = EXTERNAL_JSON_DIRECTORY + File.separator + "InfoChannelDemographicAllTime.json";
+        String channel30DaysDataPath = EXTERNAL_JSON_DIRECTORY + File.separator + "InfoChannelDemographicLast30Days.json";
+        String videosLatestPath = EXTERNAL_JSON_DIRECTORY + File.separator + "InfoLatestVideos.json";
 
         // Read JSON files and send them to the model
         try {
