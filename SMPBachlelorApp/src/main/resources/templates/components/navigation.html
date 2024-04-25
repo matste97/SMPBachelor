@@ -3,18 +3,18 @@
     <a href="#" class="closebtn" onclick="closeNav(); return false;">&times;</a>
 
     <div class="overlay-content">
-      <a th:href="@{/}">Sunnmørsposten</a>
+  <!--    <a th:href="@{/}">Sunnmørsposten</a>-->
       <a th:href="@{/facebook}">Facebook</a>
       <a th:href="@{/instagram}">Instagram</a>
       <a th:href="@{/youtube}">YouTube</a>
-      <a th:href="@{/tiktok}">TikTok</a>
-      <a th:href="@{/snapchat}">Snapchat</a>
+      <!--       <a th:href="@{/tiktok}">TikTok</a>-->
+      <!--     <a th:href="@{/snapchat}">Snapchat</a>-->
       <th:block th:if="${user == null}" >
         <a th:href="@{/login}" aria-label="Go to login page">Login</a>
       </th:block>
       <th:block th:if="${user != null}">
-        <a th:if="${user.isAdmin}" th:href="@{/admin}">ADMIN</a>
-       <a th:href="@{/logout}">Log Out</a>
+        <a th:if="${user.isAdmin}" th:href="@{/admin}">Administrator</a>
+       <a th:href="@{/logout}">Logg ut</a>
       </th:block>
     </div>
 
@@ -23,6 +23,6 @@
 
   <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
   <th:block th:if="${user != null}" >
-    <h3 th:text="'Logged in as: ' + ${user.username}"></h3>
+    <h3 th:text="'Logget inn som: ' + ${user.username}"></h3>
   </th:block>
 </nav>

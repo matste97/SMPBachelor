@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Logg på</title>
     <link rel="stylesheet" type="text/css" th:href="@{/styles/loginstyles.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/styles/styles.css}">
     <script th:src="@{/js/Navigation.js}"></script>
@@ -13,17 +13,17 @@
 <nav th:replace="components/navigation"></nav>
     <div class="login-container">
         <form class="login-form" method="post" th:action="@{/login}">
-            <h2>Login to your account</h2>
+            <h2>Logg på</h2>
             <div class="input-group">
-                <label for="username">Username:</label>
+                <label for="username">Brukernavn:</label>
                 <input type="text" id="username" name="username"required>
             </div>
             <div class="input-group">
-                <label for="password">Password:</label>
+                <label for="password">Passord:</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <p th:if="${param.error}" class="alert">Invalid username or password</p>
-            <button type="submit">Login</button>
+            <p th:if="${param.error}" class="alert">Feil brukernavn eller passord</p>
+            <button type="submit">Logg på</button>
         </form>
         <div class="logo-container">
             <img th:src="@{img/smplogo.png}" alt="Logo">

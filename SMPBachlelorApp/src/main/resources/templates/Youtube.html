@@ -35,33 +35,34 @@
 
 <main>
   <button id="updateJsonBtn">
-    Update JSON Files
+    Hent ny data
     <div class="spinner"></div>
   </button>
   <th:block th:if="${user != null}">
     <a th:if="${user.isAdmin}" th:href="@{/authorize}">
-      <button>AUTHORIZE</button>
+      <button>Koble til API</button>
     </a>
 
   </th:block>
   <div id="chartTypeDropdown">
-    <label for="chartType">Chart Type:</label>
+    <label for="chartType">Diagramtype:</label>
     <select id="chartType">
-      <option value="normal">Normal Chart</option>
-      <option value="pie">Pie Chart</option>
+      <option value="normal">Søylediagram</option>
+      <option value="pie">Kakediagram</option>
     </select>
   </div>
 <div id="ChannelChartsContainer">
-  <div id="AllTimeContainer" class="channel-chart">
-    <h2>Channel demographic All Time</h2>
-    <canvas id="channelChartAllTime" width="400" height="400"></canvas>
-  </div>
+
   <div id="30DayContainer" class="channel-chart">
-    <h2>Channel demographic Last 30 days</h2>
+    <h2>Kanaltrafikk siste 30 dager</h2>
     <canvas id="channelChart30Days" width="400" height="400"></canvas>
   </div>
+  <div id="AllTimeContainer" class="channel-chart">
+    <h2>Kanaltrafikk (All-time)</h2>
+    <canvas id="channelChartAllTime" width="400" height="400"></canvas>
+  </div>
 </div>
-  <h1>Latest Videos</h1>
+  <h1>Siste videoer</h1>
 <div id="VideosChartContainer"></div>
 </main>
 </body>
@@ -88,10 +89,12 @@
     // need to destroy exsisting to add new ones
     $('.channel-chart').remove();
     $('.video-chart-container').remove();
-    $('#ChannelChartsContainer').append('<div id="AllTimeContainer" class="channel-chart">');
+
     $('#ChannelChartsContainer').append('<div id="30DayContainer" class="channel-chart">');
-    $('#AllTimeContainer').append('<h2>Channel demographic All Time</h2>');
-    $('#30DayContainer').append('<h2>Channel demographic Last 30 days</h2>');
+    $('#ChannelChartsContainer').append('<div id="AllTimeContainer" class="channel-chart">');
+
+    $('#30DayContainer').append('<h2>Kanaltrafikk siste 30 dager</h2>');
+    $('#AllTimeContainer').append('<h2>Kanaltrafikk (All-time)</h2>');
     $('#AllTimeContainer').append('<canvas id="channelChartAllTime" width="400" height="400"></canvas>');
     $('#30DayContainer').append('<canvas id="channelChart30Days" width="400" height="400"></canvas>');
 

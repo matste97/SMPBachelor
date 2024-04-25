@@ -104,6 +104,7 @@ public class YoutubeAPIController {
     @ResponseBody
     public String updateJsonAndRefresh(Model model) {
         try {
+            System.out.println(getAvgViewTime("2G-lDVDic90"));
             getChannelGenderAgeDemographicLast30Days();
             saveLatestVideosInfoToJSON();
             getChannelGenderAgeDemographicAllTime();
@@ -324,6 +325,53 @@ public class YoutubeAPIController {
                 .getViewCount();
 }
 
+
+    public String getThumbnailUrl(String videoId) throws IOException{
+        YouTube youTubeService = YoutubeAuth.getService();
+        return youTubeService.videos()
+                .list("snippet")
+                .setId(videoId)
+                .execute()
+                .getItems()
+                .get(0)
+                .getSnippet()
+                .getThumbnails().getMedium().getUrl();
+    }
+
+    public JSONArray getAvgViewTime(String videoId) throws IOException{
+        LocalDate endDate = LocalDate.now();
+        // Format dates to match the required format for the query
+        DateTimeFormatter formatterQuery = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedEndDate = endDate.format(formatterQuery);
+
+        JSONArray array = new JSONArray();
+
+        YouTubeAnalytics youTubeAnalyticsService = YoutubeAuth.getAnalyticsService();
+        YouTubeAnalytics.Reports.Query request = youTubeAnalyticsService.reports()
+                .query();
+        QueryResponse response = request.setDimensions("video")
+                .setEndDate(formattedEndDate)
+                .setFilters("video=="+videoId)
+                .setIds("channel==MINE")
+                .setMetrics("averageViewDuration,averageViewPercentage")
+                .setStartDate("2001-01-01")
+                .execute();
+        List<List<Object>> rows = response.getRows();
+        if (rows != null) {
+            for (List<Object> row : rows) {
+                BigDecimal avgViewDuration = (BigDecimal) row.get(1);
+                BigDecimal averageViewPercentage = (BigDecimal) row.get(2);
+
+                JSONObject item = new JSONObject();
+                item.put("avgViewDurationinSec", avgViewDuration);
+                item.put("averageViewPercentage", averageViewPercentage);
+                array.add(item);
+            }
+        }
+        return array;
+    }
+
+
     public void saveLatestVideosInfoToJSON() throws IOException, GeneralSecurityException {
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();
@@ -337,11 +385,15 @@ public class YoutubeAPIController {
                 String videoTitle = getVideoTitle(videoID);
                 BigInteger videoViews = getVideoTotalViews(videoID);
                 JSONArray videoData = getVideoAgeAndGenderData(videoID);
+                JSONArray averageViews = getAvgViewTime(videoID);
                 JSONObject item = new JSONObject();
                 item.put("videoId", videoID);
                 item.put("videoTitle", videoTitle);
                 item.put("totalVideoViews", videoViews);
                 item.put("videoDemographic", videoData);
+                item.put("avgView", averageViews);
+                item.put("thumbnail", getThumbnailUrl(videoID));
+
                 array.add(item);
                 json.put(videoNumber, item);
                 videoNumber++;
@@ -351,8 +403,7 @@ public class YoutubeAPIController {
 
     public void saveJsonObjectToFile(JSONObject jsonObject, String fileName) throws IOException {
 
-        // Define the directory path where you want to save the JSON file
-
+        // Define the directory path
         File directory = new File(EXTERNAL_JSON_DIRECTORY);
 
         // Create the directory if it doesn't exist
@@ -361,7 +412,6 @@ public class YoutubeAPIController {
                 throw new IOException("Failed to create directory: " + EXTERNAL_JSON_DIRECTORY);
             }
         }
-
         // Write JSON object to file
         String filePath = EXTERNAL_JSON_DIRECTORY + File.separator + fileName + ".json";
         try (FileWriter fileWriter = new FileWriter(filePath)) {
@@ -387,8 +437,6 @@ public class YoutubeAPIController {
     public String callback(@RequestParam("code") String code) throws IOException{
         YoutubeAuth youtubeAuth = new YoutubeAuth();
         Credential credential = youtubeAuth.authorize(code);
-
-        // Save obtained credentials for future use
         youtubeAuth.saveCredentials(credential);
         return "redirect:/";
     }

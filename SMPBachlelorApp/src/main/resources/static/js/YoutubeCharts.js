@@ -19,14 +19,29 @@ function createVideoCharts(jsonData) {
                 individualChartContainer.appendChild(titleAndViewsContainer);
 
                 // Video Title
+                var thumbnail = document.createElement('img');
                 var chartTitle = document.createElement('h2');
                 var chartViews = document.createElement('p');
+                var chartAvgView = document.createElement('p');
                 chartTitle.className = 'chart-title';
-                chartTitle.className = 'chart-views';
+                thumbnail.className = 'thumbnail';
+                chartViews.className = 'chart-views';
+                chartAvgView.className = 'chart-avgViews';
                 chartTitle.textContent = videoData.videoTitle;
-                chartViews.textContent = 'Total Views: ' + videoData.totalVideoViews;
+                thumbnail.setAttribute('src', videoData.thumbnail);
+                chartViews.textContent = 'Totale visninger: ' + videoData.totalVideoViews;
+                if (videoData.avgView && videoData.avgView.length > 0) {
+                    var avgViewDuration = videoData.avgView[0].avgViewDurationinSec;
+                    var averageViewPercentage = videoData.avgView[0].averageViewPercentage;
+                    chartAvgView.textContent = 'Gjennomsnitt seertid: ' + avgViewDuration +" Sekunder (" +averageViewPercentage + "% av video)";
+
+                } else {
+                    chartViews.textContent = 'Gjennomsnitt ikke tilgjengelig';
+                }
                 titleAndViewsContainer.appendChild(chartTitle);
+                titleAndViewsContainer.appendChild(thumbnail);
                 titleAndViewsContainer.appendChild(chartViews);
+                titleAndViewsContainer.appendChild(chartAvgView);
 
                 var canvas = document.createElement('canvas');
                 canvas.width = 400; // Set width to 400
@@ -36,7 +51,7 @@ function createVideoCharts(jsonData) {
                 container.appendChild(individualChartContainer);
 
                 var datetimeInfo = document.createElement('div');
-                datetimeInfo.innerHTML = "Data gathered at: " + data.DateTimeGathered;
+                datetimeInfo.innerHTML = "Data sist hentet: " + data.DateTimeGathered;
                 individualChartContainer.appendChild(datetimeInfo);
 
                 // Process the video demographic data into Chart.js compatible format
@@ -59,7 +74,7 @@ function createVideoCharts(jsonData) {
                     });
                 } else {
                     // Provide default values if videoDemographic is empty
-                    labels.push("No demographic data");
+                    labels.push("Ikke noe data");
                     chartDataMale.push(0);
                     chartDataFemale.push(0);
                 }
@@ -71,14 +86,14 @@ function createVideoCharts(jsonData) {
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Male',
+                            label: 'Mann',
                             data: chartDataMale,
                             backgroundColor: 'rgba(54, 162, 235, 0.5)', // Blue color
                             borderColor: 'rgba(54, 162, 235, 1)',
                             borderWidth: 1
                         },
                             {
-                                label: 'Female',
+                                label: 'Kvinne',
                                 data: chartDataFemale,
                                 backgroundColor: 'rgba(255, 99, 132, 0.5)', // Red color
                                 borderColor: 'rgba(255, 99, 132, 1)',
@@ -92,14 +107,14 @@ function createVideoCharts(jsonData) {
                                 stacked: false,
                                 title: {
                                     display: true,
-                                    text: '% of viewers'
+                                    text: '% av viewers'
                                 }
                             },
                             x: {
                                 stacked: false,
                                 title: {
                                     display: true,
-                                    text: 'Demographic for video'
+                                    text: 'Demografien for video'
                                 }
                             }
                         }
@@ -139,7 +154,7 @@ function createChannelChart(containerId, channelData) {
             }
         });
     } else {
-        labels.push("No demographic data");
+        labels.push("Ikke noe data");
         maleData.push(0);
         femaleData.push(0);
     }
@@ -150,14 +165,14 @@ function createChannelChart(containerId, channelData) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Male',
+                label: 'Mann',
                 data: maleData,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)', // Blue color
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
             },
                 {
-                    label: 'Female',
+                    label: 'Kvinne',
                     data: femaleData,
                     backgroundColor: 'rgba(255, 99, 132, 0.5)', // Red color
                     borderColor: 'rgba(255, 99, 132, 1)',
@@ -171,21 +186,21 @@ function createChannelChart(containerId, channelData) {
                     stacked: false,
                     title: {
                         display: true,
-                        text: '% of viewers'
+                        text: '% av viewers'
                     }
                 },
                 x: {
                     stacked: false,
                     title: {
                         display: true,
-                        text: 'Demographic for channel'
+                        text: 'Demografien for kanalen'
                     }
                 }
             }
         }
     });
     var datetimeInfo = document.createElement('div');
-    datetimeInfo.innerHTML = "Data gathered at: " + JSON.parse(channelData).DateTimeGathered;
+    datetimeInfo.innerHTML = "Data sist hentet: " + JSON.parse(channelData).DateTimeGathered;
     container.parentNode.appendChild(datetimeInfo);
 }
 
@@ -204,15 +219,30 @@ function createVideoPieCharts(jsonData) {
                 var titleAndViewsContainer = document.createElement('div');
                 titleAndViewsContainer.className = 'title-views-container';
                 individualChartContainer.appendChild(titleAndViewsContainer);
-
+                var thumbnail = document.createElement('img');
                 var chartTitle = document.createElement('h2');
                 var chartViews = document.createElement('p');
+                var chartAvgView = document.createElement('p');
                 chartTitle.className = 'chart-title';
-                chartViews.className = 'chart-views'; // Fixed: Changed class assignment here
+                thumbnail.className = 'thumbnail';
+                chartViews.className = 'chart-views';
+                chartAvgView.className = 'chart-avgViews';
                 chartTitle.textContent = videoData.videoTitle;
-                chartViews.textContent = 'Total Views: ' + videoData.totalVideoViews;
+                thumbnail.setAttribute('src', videoData.thumbnail);
+                chartViews.textContent = 'Totale visninger: ' + videoData.totalVideoViews;
+                if (videoData.avgView && videoData.avgView.length > 0) {
+                    var avgViewDuration = videoData.avgView[0].avgViewDurationinSec;
+                    var averageViewPercentage = videoData.avgView[0].averageViewPercentage;
+                    chartAvgView.textContent = 'Gjennomsnitt seertid: ' + avgViewDuration +" Sekunder (" +averageViewPercentage + "% av video)";
+
+                } else {
+                    chartViews.textContent = 'Gjennomsnitt ikke tilgjengelig';
+                }
                 titleAndViewsContainer.appendChild(chartTitle);
+                titleAndViewsContainer.appendChild(thumbnail);
                 titleAndViewsContainer.appendChild(chartViews);
+                titleAndViewsContainer.appendChild(chartAvgView);
+
 
                 var canvas = document.createElement('canvas');
                 canvas.width = 400;
@@ -222,7 +252,7 @@ function createVideoPieCharts(jsonData) {
                 container.appendChild(individualChartContainer);
 
                 var datetimeInfo = document.createElement('div');
-                datetimeInfo.innerHTML = "Data gathered at: " + data.DateTimeGathered;
+                datetimeInfo.innerHTML = "Data sist hentet: " + data.DateTimeGathered;
                 individualChartContainer.appendChild(datetimeInfo);
 
                 var labels = [];
@@ -242,19 +272,19 @@ function createVideoPieCharts(jsonData) {
                         index++;
                     });
                 } else {
-                    labels.push("No demographic data");
+                    labels.push("Ikke noe data");
                     chartData.push(0);
                 }
 
                 var ctx = canvas.getContext('2d');
                 new Chart(ctx, {
-                    type: 'pie', // Changed chart type to pie
+                    type: 'pie',
                     data: {
                         labels: labels,
                         datasets: [{
                             data: chartData,
                             backgroundColor: backgroundColors,
-                            borderColor: 'rgba(0, 0, 0, 1)', // black border to more easily tell slices apart from each other
+                            borderColor: 'rgba(0, 0, 0, 1)',
                             borderWidth: 1}]
                     },
                 });
@@ -287,30 +317,30 @@ function createChannelPieChart(containerId, channelData) {
             index++;
         });
     } else {
-        labels.push("No demographic data");
+        labels.push("Ikke noe data");
         chartData.push(0);
     }
 
     new Chart(ctx, {
-        type: 'pie', // Changed chart type to pie
+        type: 'pie',
         data: {
             labels: labels,
             datasets: [{
                 data: chartData,
                 backgroundColor: backgroundColors,
-                borderColor: 'rgba(0, 0, 0, 1)', // black border to more easily tell slices apart from each other
+                borderColor: 'rgba(0, 0, 0, 1)',
                 borderWidth: 1}]
         }
     });
     var datetimeInfo = document.createElement('div');
-    datetimeInfo.innerHTML = "Data gathered at: " + JSON.parse(channelData).DateTimeGathered;
+    datetimeInfo.innerHTML = "Data sist hentet: " + JSON.parse(channelData).DateTimeGathered;
     container.parentNode.appendChild(datetimeInfo);
 }
 
 
-// Function to generate a color based on the number
+
 function selectColor(number) {
-    const hue = number * 137.508; // use golden angle approximation
+    const hue = number * 137.508;
     return `hsl(${hue},50%,75%)`;
 }
 

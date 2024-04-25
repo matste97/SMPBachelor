@@ -85,7 +85,7 @@ public class YoutubeAuth {
                 googleClientSecrets,
                 SCOPES
         ).setAccessType("offline")
-                .setDataStoreFactory(dataStoreFactory) // Set the data store factory
+                .setDataStoreFactory(dataStoreFactory)
                 .build();
     }
 
