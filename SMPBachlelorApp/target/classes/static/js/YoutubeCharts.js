@@ -28,7 +28,14 @@ function createVideoCharts(jsonData) {
                 chartViews.className = 'chart-views';
                 chartAvgView.className = 'chart-avgViews';
                 chartTitle.textContent = videoData.videoTitle;
-                thumbnail.setAttribute('src', videoData.thumbnail);
+                if (videoData.thumbnail !== undefined){
+                    thumbnail.setAttribute('src', videoData.thumbnail);
+                }
+                else{
+                    var textNode = document.createTextNode('kunnne ikke hente thumbnail');
+                    thumbnail = textNode;
+                }
+
                 chartViews.textContent = 'Totale visninger: ' + videoData.totalVideoViews;
                 if (videoData.avgView && videoData.avgView.length > 0) {
                     var avgViewDuration = videoData.avgView[0].avgViewDurationinSec;
@@ -228,7 +235,13 @@ function createVideoPieCharts(jsonData) {
                 chartViews.className = 'chart-views';
                 chartAvgView.className = 'chart-avgViews';
                 chartTitle.textContent = videoData.videoTitle;
-                thumbnail.setAttribute('src', videoData.thumbnail);
+                if (videoData.thumbnail !== undefined){
+                    thumbnail.setAttribute('src', videoData.thumbnail);
+                }
+                else{
+                    var textNode = document.createTextNode('kunnne ikke hente thumbnail');
+                    thumbnail = textNode;
+                }
                 chartViews.textContent = 'Totale visninger: ' + videoData.totalVideoViews;
                 if (videoData.avgView && videoData.avgView.length > 0) {
                     var avgViewDuration = videoData.avgView[0].avgViewDurationinSec;

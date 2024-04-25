@@ -104,7 +104,6 @@ public class YoutubeAPIController {
     @ResponseBody
     public String updateJsonAndRefresh(Model model) {
         try {
-            System.out.println(getAvgViewTime("2G-lDVDic90"));
             getChannelGenderAgeDemographicLast30Days();
             saveLatestVideosInfoToJSON();
             getChannelGenderAgeDemographicAllTime();
@@ -212,7 +211,7 @@ public class YoutubeAPIController {
         }
     }
 
-    public List<String> getAllVideoIds() throws IOException, GeneralSecurityException {
+    public List<String> getAllVideoIds() throws IOException{
 
         List<String> videoIds = new ArrayList<>();
 
