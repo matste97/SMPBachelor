@@ -42,8 +42,9 @@ public class AdminController {
     public String changeUserPassword(@RequestParam("username") String username,
                                                 @RequestParam("newPassword") String newPassword,Model model) {
         if (accessUserService.changeUserPassword(username, newPassword)) {
-            model.addAttribute("username", username);
-            return "passwordChangeSuccess";
+            model.addAttribute("successMessage", "Passord bytte for: " + username + " var vellykket.");
+            model.addAttribute("users",userRepository.findAllUsers());
+            return "adminPage";
         } else {
             model.addAttribute("errorMessage", "Password must be at least 6 characters");
             model.addAttribute("username", username);

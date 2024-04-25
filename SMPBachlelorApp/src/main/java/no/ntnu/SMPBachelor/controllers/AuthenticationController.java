@@ -3,6 +3,7 @@ package no.ntnu.SMPBachelor.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.ntnu.SMPBachelor.dto.SignupDto;
+import no.ntnu.SMPBachelor.repositories.UserRepository;
 import no.ntnu.SMPBachelor.service.AccessUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,8 @@ public class AuthenticationController {
 
     @Autowired
     private AccessUserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @GetMapping("/login")
@@ -65,8 +68,9 @@ public class AuthenticationController {
         }
         String errorMessage = userService.tryCreateNewUser(signupData.getUsername(), signupData.getPassword());
         if (errorMessage == null) {
-            model.addAttribute("username", signupData.getUsername());
-            return "signUpSuccess";
+            model.addAttribute("successMessage", "Oppretting av bruker konto: " + signupData.getUsername() + " var vellykket.");
+            model.addAttribute("users",userRepository.findAllUsers());
+            return "adminPage";
         } else {
             model.addAttribute("errorMessage", errorMessage);
             return "signUp";

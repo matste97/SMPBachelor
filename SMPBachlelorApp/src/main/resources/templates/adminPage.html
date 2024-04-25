@@ -23,10 +23,12 @@
 <body>
 <nav th:replace="components/navigation"></nav>
 <main>
+
 <h1>Brukere</h1>
     <a th:href="@{/signup}">
         <button  id="newUserButton">Lag ny bruker</button>
     </a>
+    <div th:if="${successMessage}" th:text="${successMessage}" id="successMessage"></div>
 <ul id="usersList">
     <th:block th:each="user : ${users}">
         <div id="listUser">
