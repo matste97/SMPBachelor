@@ -14,21 +14,21 @@
   <div class="login-container">
     <form class="login-form" method="post" th:action="@{/signup}" th:object="${signupData}">
       <div class="input-group">
-        <h2>Create an account</h2>
+        <h2>Lag ny bruker</h2>
         <div class="input-group">
-          <label for="username" class="input-label">Username:</label>
+          <label for="username" class="input-label">Brukernavn:</label>
           <input class="text-input" id="username" name="username">
         </div>
         <div class="input-group">
-          <label for="password" class="input-label">Password:</label>
+          <label for="password" class="input-label">Passord:</label>
           <input type="password" id="password" name="password" class="text-input" >
         </div>
         <div class="input-group">
-          <label for="repeat" class="input-label">Repeat password:</label>
+          <label for="repeat" class="input-label">Gjenta Passord:</label>
           <input type="password" id="repeat" name="repeat" class="text-input" >
         </div>
         <p th:if="${errorMessage != null}" id="alert" class="alert" th:text="${errorMessage}"></p>
-        <button type="submit">SUBMIT</button>
+        <button type="submit">Opprett</button>
       </div>
     </form>
     <div class="logo-container">

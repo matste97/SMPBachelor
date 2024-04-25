@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Page</title>
+    <title>Admin Side</title>
     <link rel="stylesheet" type="text/css" th:href="@{/styles/styles.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/styles/adminstyles.css}">
     <script th:src="@{/js/Navigation.js}"></script>
@@ -14,8 +14,12 @@
                 var result = confirm("Er du sikker du vil slette '" + username + "' brukeren?");
                 if (result) {
                     document.getElementById("deleteForm-" + username).submit();
+
+
                 }
             }
+            var deleteMessage = "Deleted user successfully";
+            document.getElementById("deleteMessage").innerText = deleteMessage;
         }
 
     </script>
@@ -29,6 +33,7 @@
         <button  id="newUserButton">Lag ny bruker</button>
     </a>
     <div th:if="${successMessage}" th:text="${successMessage}" id="successMessage"></div>
+    <div id="deleteMessage"></div>
 <ul id="usersList">
     <th:block th:each="user : ${users}">
         <div id="listUser">

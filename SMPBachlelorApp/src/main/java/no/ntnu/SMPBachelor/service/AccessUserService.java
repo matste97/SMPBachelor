@@ -75,9 +75,9 @@ public class AccessUserService implements UserDetailsService {
     public String tryCreateNewUser(String username, String password) {
         String errorMessage;
         if ("".equals(username)) {
-            errorMessage = "Username can't be empty";
+            errorMessage = "Brukernavn kan ikke være tomt";
         } else if (userExists(username)) {
-            errorMessage = "Username already taken";
+            errorMessage = "Brukernavn er tatt";
         } else {
             errorMessage = checkPasswordRequirements(password);
             if (errorMessage == null) {
@@ -96,9 +96,9 @@ public class AccessUserService implements UserDetailsService {
     private String checkPasswordRequirements(String password) {
         String errorMessage = null;
         if (password == null || password.length() == 0) {
-            errorMessage = "Password can't be empty";
+            errorMessage = "Passord kan ikke være tomt";
         } else if (password.length() < MIN_PASSWORD_LENGTH) {
-            errorMessage = "Password must be at least " + MIN_PASSWORD_LENGTH + " characters";
+            errorMessage = "Passord må minst ha " + MIN_PASSWORD_LENGTH + " tegn";
         }
         return errorMessage;
     }

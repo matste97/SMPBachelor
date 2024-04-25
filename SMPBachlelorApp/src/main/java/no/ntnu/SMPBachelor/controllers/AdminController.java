@@ -32,9 +32,11 @@ public class AdminController {
     }
 
     @PostMapping("/deleteUser")
-    public String deleteUser(@RequestParam("username") String username) {
+    public String deleteUser(@RequestParam("username") String username,Model model) {
         userRepository.findByUsername(username).ifPresent(userRepository::delete);
-        return "redirect:/admin";
+        model.addAttribute("users",userRepository.findAllUsers());
+        model.addAttribute("successMessage", "Sletting av bruker: " + username + " var vellykket.");
+        return "adminPage";
     }
 
 

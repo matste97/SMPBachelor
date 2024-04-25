@@ -76,7 +76,7 @@ button{
 
 }
 
-.button-container button:hover {
+button:hover {
     background-color: #555;
 }
 .username{

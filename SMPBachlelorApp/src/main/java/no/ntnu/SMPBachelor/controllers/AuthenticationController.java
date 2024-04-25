@@ -63,7 +63,7 @@ public class AuthenticationController {
     public String signupProcess(@ModelAttribute SignupDto signupData, Model model) {
         model.addAttribute("signupData", signupData);
         if (!signupData.getPassword().equals(signupData.getRepeat())) {
-            model.addAttribute("errorMessage", "Passwords do not match");
+            model.addAttribute("errorMessage", "Passordene er ikke like");
             return "signUp";
         }
         String errorMessage = userService.tryCreateNewUser(signupData.getUsername(), signupData.getPassword());
