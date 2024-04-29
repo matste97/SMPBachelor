@@ -23,7 +23,7 @@ public class InstagramAuth {
     public static JSONObject getUserData(String accessToken) throws IOException {
         // Build URL for fetching user data
         HttpUrl url = HttpUrl.parse(INSTAGRAM_API_BASE_URL + "me").newBuilder()
-                .addQueryParameter("fields", "id,username,followers_count") // Add fields you want to retrieve
+                .addQueryParameter("fields", "id,username,followers_count")
                 .addQueryParameter("access_token", accessToken)
                 .build();
 
