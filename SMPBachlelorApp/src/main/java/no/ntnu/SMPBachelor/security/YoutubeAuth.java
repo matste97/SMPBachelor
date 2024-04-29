@@ -90,7 +90,6 @@ public class YoutubeAuth {
     }
 
     public static boolean secretExists() {
-        System.out.println(Paths.get(String.valueOf(clientSecretsFilePath)));
         return exists(Paths.get(String.valueOf(clientSecretsFilePath)));
 
     }
@@ -105,25 +104,9 @@ public class YoutubeAuth {
     }
 
     public static Credential loadCredentials() throws IOException {
-        java.io.File file = new java.io.File(TOKENS_DIRECTORY_PATH, "token.json");
-        if (file.exists()) {
-            FileInputStream fis = new FileInputStream(file);
             GoogleAuthorizationCodeFlow flow = buildGoogleFlow(getSecrets());
             return flow.loadCredential("user_id");
-        }
-        return null;
     }
-
-
-    public static void saveCredentials(Credential credential) {
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(String.valueOf(tokenSecretsFilePath)))) {
-            outputStream.writeObject(credential.getAccessToken());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 
     public Credential authorize(String code) throws IOException {
         GoogleClientSecrets googleClientSecrets = getSecrets();
@@ -145,41 +128,20 @@ public class YoutubeAuth {
     }
 
 
-
-
-
     public static YouTube getService() throws IOException {
         Credential credential =  YoutubeAuth.loadCredentials();
         if (credential == null) {
             throw new IllegalStateException("Authorization required.");
         }
 
-        if (credential.getExpiresInSeconds() <= 0) {
-            System.out.println("HERE EXPIRE RUNS");
-            credential.refreshToken();
-            YoutubeAuth.saveCredentials(credential);
-        }
         return new YouTube.Builder(httpTransport, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
     }
 
     public static YouTubeAnalytics getAnalyticsService() throws IOException {
-
             // Load credentials
             Credential credential = YoutubeAuth.loadCredentials();
-        if (credential == null) {
-            throw new IllegalStateException("Authorization required.");
-        }
-
-
-
-
-            if (credential.getExpiresInSeconds() <= 0) {
-                credential.refreshToken();
-                YoutubeAuth.saveCredentials(credential);
-            }
-
             // Build and return the YouTubeAnalytics service
             return new YouTubeAnalytics.Builder(httpTransport, JSON_FACTORY, credential)
                     .setApplicationName(APPLICATION_NAME)
