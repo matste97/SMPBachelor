@@ -34,6 +34,7 @@
 
 
 <main>
+  <p th:if="${errorMessage != null}" id="alert" class="alert" th:text="${errorMessage}"></p>
   <button id="updateJsonBtn">
     Hent ny data
     <div class="spinner"></div>
@@ -127,14 +128,19 @@
         url: '/updateJsonAndRefresh',
         success: function(response) {
           console.log(response);
-          // Refresh the page to load the updated JSON data
-          location.reload();
+          if (response.startsWith("Error")) {
+            var errorMessage = response;
+            alert(errorMessage);
+          } else {
+            location.reload();
+          }
         },
-        error: function(xhr, status, error) {
+        error: function(xhr) {
           console.error(xhr.responseText);
+          alert(xhr.responseText);
         },
         complete: function() {
-          // Hide loading spinner
+          // Hide loading spinner regardless of success or error
           $('.spinner').hide();
         }
       });

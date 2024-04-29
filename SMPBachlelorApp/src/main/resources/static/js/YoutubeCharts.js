@@ -161,7 +161,7 @@ function createChannelChart(containerId, channelData) {
             }
         });
     } else {
-        labels.push("Ikke noe data");
+        labels.push("Ikke noe data. Feil med authentication?");
         maleData.push(0);
         femaleData.push(0);
     }
@@ -281,11 +281,11 @@ function createVideoPieCharts(jsonData) {
                             labels.push(label);
                         }
                         chartData.push(demographic.viewerPercentage);
-                        backgroundColors.push(selectColor(index*3));
+                        backgroundColors.push(selectColor(index*10));
                         index++;
                     });
                 } else {
-                    labels.push("Ikke noe data");
+                    labels.push("Ikke noe data.");
                     chartData.push(0);
                 }
 
@@ -326,11 +326,11 @@ function createChannelPieChart(containerId, channelData) {
             chartData.push(demographic.viewerPercentage);
 
             data.push(demographic.viewerPercentage);
-            backgroundColors.push(selectColor(index*3));
+            backgroundColors.push(selectColor(index*10));
             index++;
         });
     } else {
-        labels.push("Ikke noe data");
+        labels.push("Ikke noe data. Feil med authentication?");
         chartData.push(0);
     }
 

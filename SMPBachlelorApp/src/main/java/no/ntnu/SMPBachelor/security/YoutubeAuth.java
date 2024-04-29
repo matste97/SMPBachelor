@@ -13,6 +13,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtubeAnalytics.v2.YouTubeAnalytics;
 
+
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,15 +26,14 @@ import static java.nio.file.Files.exists;
 public class YoutubeAuth {
 
 
-    private static final String EXTERNAL_JSON_DIRECTORY = Paths.get("").toAbsolutePath().getParent() + File.separator +  "Data" + File.separator + "Json";;
+    private static final String EXTERNAL_JSON_DIRECTORY = Paths.get("").toAbsolutePath().getParent() + File.separator +  "Data" + File.separator + "Json";
     private static final String CLIENT_SECRETS_FILENAME = "client_secrets.json";
     private static final Path clientSecretsFilePath = Paths.get(EXTERNAL_JSON_DIRECTORY + File.separator +  CLIENT_SECRETS_FILENAME);
     private static final String APPLICATION_NAME = "Your Application Name";
-    private static final String TOKENS_DIRECTORY_PATH = Paths.get("").toAbsolutePath().getParent() + File.separator +  "Data" + File.separator + "tokens";;
-    private static final String TOKEN_SECRETS_FILENAME = "token.json";
+    private static final String TOKENS_DIRECTORY_PATH = Paths.get("").toAbsolutePath().getParent() + File.separator +  "Data" + File.separator + "tokens";
 
-    private static final Path tokenSecretsFilePath = Paths.get(TOKENS_DIRECTORY_PATH + File.separator +  TOKEN_SECRETS_FILENAME);
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final Collection<String> SCOPES = Arrays.asList(
             "https://www.googleapis.com/auth/youtube.readonly",
@@ -121,11 +121,10 @@ public class YoutubeAuth {
     /**
      * Exchanges an authorization code for a token response.
      * @param code The authorization code to exchange for a token.
-     * @return TokenResponse resulting from the code exchange.
      * @throws IOException if the token exchange fails.
      */
 
-    public Credential authorize(String code) throws IOException {
+    public void authorize(String code) throws IOException {
         GoogleClientSecrets googleClientSecrets = getSecrets();
         GoogleAuthorizationCodeFlow codeFlow = buildGoogleFlow(googleClientSecrets);
 
@@ -134,13 +133,7 @@ public class YoutubeAuth {
             TokenResponse tokenResponse = codeFlow.newTokenRequest(code)
                     .setRedirectUri(googleClientSecrets.getDetails().getRedirectUris().get(0))
                     .execute();
-
-            // Store the credential
-            Credential credential = codeFlow.createAndStoreCredential(tokenResponse, "user_id");
-            return credential;
-        } else {
-            // Load stored credential
-            return loadCredentials();
+            codeFlow.createAndStoreCredential(tokenResponse, "user_id");
         }
     }
 
@@ -152,7 +145,7 @@ public class YoutubeAuth {
     public static YouTube getService() throws IOException {
         Credential credential =  loadCredentials();
         if (credential == null) {
-            throw new IllegalStateException("Authorization required.");
+            return null;
         }
 
         return new YouTube.Builder(httpTransport, JSON_FACTORY, credential)
@@ -166,6 +159,9 @@ public class YoutubeAuth {
     public static YouTubeAnalytics getAnalyticsService() throws IOException {
             // Load credentials
             Credential credential = loadCredentials();
+        if (credential == null) {
+            return null;
+        }
             // Build and return the YouTubeAnalytics service
             return new YouTubeAnalytics.Builder(httpTransport, JSON_FACTORY, credential)
                     .setApplicationName(APPLICATION_NAME)

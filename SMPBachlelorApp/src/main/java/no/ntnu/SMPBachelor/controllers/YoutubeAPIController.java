@@ -2,7 +2,6 @@ package no.ntnu.SMPBachelor.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
@@ -12,6 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import no.ntnu.SMPBachelor.security.YoutubeAuth;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -102,22 +103,24 @@ public class YoutubeAPIController {
 
     @GetMapping("/updateJsonAndRefresh")
     @ResponseBody
-    public String updateJsonAndRefresh(Model model) {
+    public ResponseEntity<?> updateJsonAndRefresh() throws GeneralSecurityException {
         try {
-            getChannelGenderAgeDemographicLast30Days();
+            if ((getChannelGenderAgeDemographicLast30Days() == null) ||
+                    (getChannelGenderAgeDemographicAllTime() == null)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Feil med authentication, kontakt admin for autentisering.");
+            }
             saveLatestVideosInfoToJSON();
-            getChannelGenderAgeDemographicAllTime();
-            return "JSON files updated successfully";
-        } catch (IOException | GeneralSecurityException e) {
-            e.printStackTrace();
-            model.addAttribute("errorMessage", "Error occurred: " + e.getMessage());
-            throw new RuntimeException(e);
+            return ResponseEntity.ok("Data updated successfully");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
         }
     }
 
 
 
-    public void getChannelGenderAgeDemographicAllTime() throws IOException {
+    public String getChannelGenderAgeDemographicAllTime() throws IOException {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatterQuery = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String endDate = today.format(formatterQuery);
@@ -132,6 +135,9 @@ public class YoutubeAPIController {
         json.put("QueryStartTime", "2000-01-01");
         json.put("QueryEndTime", endDate);
         YouTubeAnalytics youTubeAnalytics = YoutubeAuth.getAnalyticsService();
+        if(youTubeAnalytics == null){
+            return null;
+        }
         YouTubeAnalytics.Reports.Query request = youTubeAnalytics.reports()
                 .query();
         QueryResponse response = request.setDimensions("channel")
@@ -158,10 +164,11 @@ public class YoutubeAPIController {
 
             saveJsonObjectToFile(json, "InfoChannelDemographicAllTime");
         }
+        return "Finished saving";
     }
 
 
-    public void getChannelGenderAgeDemographicLast30Days() throws IOException {
+    public String getChannelGenderAgeDemographicLast30Days() throws IOException {
 
         LocalDate endDate = LocalDate.now();
         // Calculate the start date by subtracting 30 days from today
@@ -183,6 +190,9 @@ public class YoutubeAPIController {
         json.put("QueryEndTime", formattedEndDate);
         // Assuming you have obtained the credential through the authorization process
         YouTubeAnalytics youTubeAnalyticsService = YoutubeAuth.getAnalyticsService();
+        if(youTubeAnalyticsService == null){
+            return null;
+        }
 
         YouTubeAnalytics.Reports.Query request = youTubeAnalyticsService.reports().query();
         QueryResponse response = request.setDimensions("channel")
@@ -209,6 +219,7 @@ public class YoutubeAPIController {
 
             saveJsonObjectToFile(json, "InfoChannelDemographicLast30Days");
         }
+        return "Finished saving.";
     }
 
     public List<String> getAllVideoIds() throws IOException{
@@ -218,6 +229,10 @@ public class YoutubeAPIController {
         String nextPageToken = "";
         while (nextPageToken != null) {
             YouTube youTubeService = YoutubeAuth.getService();
+            if (youTubeService == null){
+                return null;
+            }
+
             YouTube.Search.List request = youTubeService.search()
                     .list("snippet")
                     .setForMine(true)
@@ -243,6 +258,10 @@ public class YoutubeAPIController {
         List<String> videoIds = new ArrayList<>();
 
         YouTube youTubeService = YoutubeAuth.getService();
+        if (youTubeService == null){
+            return null;
+        }
+
         YouTube.Search.List request = youTubeService.search()
                 .list("snippet")
                 .setForMine(true)
@@ -269,6 +288,9 @@ public class YoutubeAPIController {
         JSONArray array = new JSONArray();
 
         YouTubeAnalytics youTubeAnalyticsService = YoutubeAuth.getAnalyticsService();
+        if(youTubeAnalyticsService == null){
+            return null;
+        }
 
         YouTubeAnalytics.Reports.Query request = youTubeAnalyticsService.reports().query();
         QueryResponse response = request.setDimensions("channel")
@@ -302,6 +324,9 @@ public class YoutubeAPIController {
 
     public String getVideoTitle(String videoId) throws IOException{
         YouTube youTubeService = YoutubeAuth.getService();
+        if (youTubeService == null){
+            return null;
+        }
         return youTubeService.videos()
                 .list("snippet")
                 .setId(videoId)
@@ -314,6 +339,10 @@ public class YoutubeAPIController {
 
     public BigInteger getVideoTotalViews(String videoId) throws IOException{
         YouTube youTubeService = YoutubeAuth.getService();
+        if (youTubeService == null){
+            return null;
+        }
+
         return youTubeService.videos()
                 .list("statistics")
                 .setId(videoId)
@@ -327,6 +356,10 @@ public class YoutubeAPIController {
 
     public String getThumbnailUrl(String videoId) throws IOException{
         YouTube youTubeService = YoutubeAuth.getService();
+        if (youTubeService == null){
+            return null;
+        }
+
         return youTubeService.videos()
                 .list("snippet")
                 .setId(videoId)
@@ -346,6 +379,9 @@ public class YoutubeAPIController {
         JSONArray array = new JSONArray();
 
         YouTubeAnalytics youTubeAnalyticsService = YoutubeAuth.getAnalyticsService();
+        if(youTubeAnalyticsService == null){
+            return null;
+        }
         YouTubeAnalytics.Reports.Query request = youTubeAnalyticsService.reports()
                 .query();
         QueryResponse response = request.setDimensions("video")
@@ -435,7 +471,7 @@ public class YoutubeAPIController {
     @GetMapping("/Callback")
     public String callback(@RequestParam("code") String code) throws IOException{
         YoutubeAuth youtubeAuth = new YoutubeAuth();
-        Credential credential = youtubeAuth.authorize(code);
+        youtubeAuth.authorize(code);
         return "redirect:/";
     }
 }
