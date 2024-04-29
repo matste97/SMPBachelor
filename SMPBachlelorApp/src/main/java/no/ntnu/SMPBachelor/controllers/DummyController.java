@@ -27,14 +27,6 @@ public class DummyController {
 
 
 
-    @GetMapping("instagram")
-    @Operation(
-            summary = "Show insta page",
-            description = "Displays the insta page"
-    )
-    public String insta(Model model) {
-        return "instagram";
-    }
 
     @GetMapping("facebook")
     @Operation(
