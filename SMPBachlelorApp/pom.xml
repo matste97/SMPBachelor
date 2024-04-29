@@ -16,6 +16,8 @@
     <description>App that gathers social media demographic info and displays it</description>
     <properties>
         <java.version>17</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
