@@ -6,11 +6,13 @@
     <title>Instagram</title>
     <link rel="stylesheet" type="text/css" th:href="@{/styles/styles.css}">
     <script th:src="@{/js/Navigation.js}"></script>
-
 </head>
 <body>
 <nav th:replace="components/navigation"></nav>
     <h1>INSTAGRAM PAGE</h1>
-    <h2>NOT IMPLEMENTED YET</h2>
+    <!-- Display the follower count -->
+    <h2 th:if="${followersCount != null}" th:text="'Followers count: ' + ${followersCount}"></h2>
+    <!-- Handle the case when follower count is not available -->
+    <h2 th:if="${followersCount == null}">Follower count not available</h2>
 </body>
 </html>
