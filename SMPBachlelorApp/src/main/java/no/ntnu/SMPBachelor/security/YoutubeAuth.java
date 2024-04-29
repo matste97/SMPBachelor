@@ -89,11 +89,18 @@ public class YoutubeAuth {
                 .build();
     }
 
+    /**
+     * Checks if the client secret exists
+     * @return boolean, true if exists.
+     */
     public static boolean secretExists() {
         return exists(Paths.get(String.valueOf(clientSecretsFilePath)));
-
     }
 
+    /**
+     * Gets ands returns the authorization URL to authorize with the Google API
+     * @return String, url for authorization
+     */
     public static String getAuthorizationUrl() throws IOException {
 
         GoogleClientSecrets googleClientSecrets = getSecrets();
@@ -102,11 +109,21 @@ public class YoutubeAuth {
                 .setRedirectUri(googleClientSecrets.getDetails().getRedirectUris()
                         .get(0)).build();
     }
-
+    /**
+     * This method loads credentials required for authentication.
+     * @return Credential generated from the token response.
+     */
     public static Credential loadCredentials() throws IOException {
             GoogleAuthorizationCodeFlow flow = buildGoogleFlow(getSecrets());
             return flow.loadCredential("user_id");
     }
+
+    /**
+     * Exchanges an authorization code for a token response.
+     * @param code The authorization code to exchange for a token.
+     * @return TokenResponse resulting from the code exchange.
+     * @throws IOException if the token exchange fails.
+     */
 
     public Credential authorize(String code) throws IOException {
         GoogleClientSecrets googleClientSecrets = getSecrets();
@@ -128,8 +145,12 @@ public class YoutubeAuth {
     }
 
 
+    /**
+     * Return YouTube service
+     */
+
     public static YouTube getService() throws IOException {
-        Credential credential =  YoutubeAuth.loadCredentials();
+        Credential credential =  loadCredentials();
         if (credential == null) {
             throw new IllegalStateException("Authorization required.");
         }
@@ -138,10 +159,13 @@ public class YoutubeAuth {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
     }
+    /**
+     * Return YouTube Analytics service
+     */
 
     public static YouTubeAnalytics getAnalyticsService() throws IOException {
             // Load credentials
-            Credential credential = YoutubeAuth.loadCredentials();
+            Credential credential = loadCredentials();
             // Build and return the YouTubeAnalytics service
             return new YouTubeAnalytics.Builder(httpTransport, JSON_FACTORY, credential)
                     .setApplicationName(APPLICATION_NAME)
