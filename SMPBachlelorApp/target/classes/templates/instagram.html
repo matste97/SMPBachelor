@@ -11,7 +11,7 @@
 <nav th:replace="components/navigation"></nav>
     <h1>INSTAGRAM PAGE</h1>
     <!-- Display the follower count -->
-    <h2 th:if="${followersCount != null}" th:text="'Followers count: ' + ${followersCount}"></h2>
+    <h2 th:if="${followersCount != null}" th:text="'Følgere: ' + ${followersCount}"></h2>
     <!-- Handle the case when follower count is not available -->
     <h2 th:if="${followersCount == null}">Follower count not available</h2>
 </body>
