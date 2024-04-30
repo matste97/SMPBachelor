@@ -310,9 +310,9 @@ public class YoutubeAPIController {
                 BigDecimal viewerPercentage = (BigDecimal) row.get(2);
 
                 JSONObject item = new JSONObject();
-                item.put("Age Group", ageGroup);
-                item.put("Gender", gender);
-                item.put("Viewer Percentage", viewerPercentage);
+                item.put("ageGroup", ageGroup);
+                item.put("gender", gender);
+                item.put("viewerPercentage", viewerPercentage);
                 array.add(item);
             }
             return array;

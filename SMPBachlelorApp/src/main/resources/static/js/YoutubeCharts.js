@@ -65,6 +65,7 @@ function createVideoCharts(jsonData) {
                 var labels = [];
                 var chartDataMale = [];
                 var chartDataFemale = [];
+                var chartDataUserDefined= [];
 
                 if (videoData.videoDemographic.length > 0) {
                     videoData.videoDemographic.forEach(function(item) {
@@ -78,17 +79,21 @@ function createVideoCharts(jsonData) {
                         } else if (item.gender === 'female') {
                             chartDataFemale.push(item.viewerPercentage);
                         }
+                        else{
+                            chartDataUserDefined.push(item.viewerPercentage);
+                        }
                     });
                 } else {
                     // Provide default values if videoDemographic is empty
                     labels.push("Ikke noe data");
                     chartDataMale.push(0);
                     chartDataFemale.push(0);
+                    chartDataUserDefined.push(0);
                 }
 
                 // Create the chart
                 var ctx = canvas.getContext('2d');
-                var viewerChart = new Chart(ctx, {
+                new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: labels,
@@ -104,6 +109,13 @@ function createVideoCharts(jsonData) {
                                 data: chartDataFemale,
                                 backgroundColor: 'rgba(255, 99, 132, 0.5)', // Red color
                                 borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Brukerdefinert',
+                                data: chartDataUserDefined,
+                                backgroundColor: 'rgba(57,161,53,0.5)', // Green color
+                                borderColor: 'rgba(57,161,53,1)',
                                 borderWidth: 1
                             }]
                     },
@@ -143,6 +155,7 @@ function createChannelChart(containerId, channelData) {
     var labels = [];
     var maleData = [];
     var femaleData = [];
+    var userdefinedData = [];
 
 
     // Prepare data for chart
@@ -159,11 +172,15 @@ function createChannelChart(containerId, channelData) {
             } else if (demographic.gender === 'female') {
                 femaleData.push(demographic.viewerPercentage);
             }
+            else{
+                userdefinedData.push(demographic.viewerPercentage);
+            }
         });
     } else {
-        labels.push("Ikke noe data. Feil med authentication?");
+        labels.push("Ikke nok data.");
         maleData.push(0);
         femaleData.push(0);
+        userdefinedData.push(0);
     }
 
     // Create Chart
@@ -183,6 +200,13 @@ function createChannelChart(containerId, channelData) {
                     data: femaleData,
                     backgroundColor: 'rgba(255, 99, 132, 0.5)', // Red color
                     borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Brukerdefinert',
+                    data: userdefinedData,
+                    backgroundColor: 'rgba(57,161,53,0.5)', // Green color
+                    borderColor: 'rgba(57,161,53,1)',
                     borderWidth: 1
                 }]
         },
@@ -285,7 +309,7 @@ function createVideoPieCharts(jsonData) {
                         index++;
                     });
                 } else {
-                    labels.push("Ikke noe data.");
+                    labels.push("Ikke nok data.");
                     chartData.push(0);
                 }
 
@@ -330,7 +354,7 @@ function createChannelPieChart(containerId, channelData) {
             index++;
         });
     } else {
-        labels.push("Ikke noe data. Feil med authentication?");
+        labels.push("Ikke nok data.");
         chartData.push(0);
     }
 
