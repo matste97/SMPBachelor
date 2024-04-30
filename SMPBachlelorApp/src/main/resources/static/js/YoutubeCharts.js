@@ -85,10 +85,14 @@ function createVideoCharts(jsonData) {
                     });
                 } else {
                     // Provide default values if videoDemographic is empty
-                    labels.push("Ikke noe data");
+                    labels.push("Ikke nok data");
                     chartDataMale.push(0);
                     chartDataFemale.push(0);
                     chartDataUserDefined.push(0);
+                    var noDataInfo = document.createElement('a');
+                    noDataInfo.href= "https://support.google.com/youtube/answer/9101241?hl=en#zippy=%2Cdemographics-data";
+                    noDataInfo.textContent = "Limited data info";
+                    individualChartContainer.appendChild(noDataInfo);
                 }
 
                 // Create the chart
@@ -181,6 +185,10 @@ function createChannelChart(containerId, channelData) {
         maleData.push(0);
         femaleData.push(0);
         userdefinedData.push(0);
+        var noDataInfo = document.createElement('a');
+        noDataInfo.href= "https://support.google.com/youtube/answer/9101241?hl=en#zippy=%2Cdemographics-data";
+        noDataInfo.textContent = "Limited data info";
+        container.parentNode.appendChild(noDataInfo);
     }
 
     // Create Chart
@@ -311,6 +319,10 @@ function createVideoPieCharts(jsonData) {
                 } else {
                     labels.push("Ikke nok data.");
                     chartData.push(0);
+                    var noDataInfo = document.createElement('a');
+                    noDataInfo.href= "https://support.google.com/youtube/answer/9101241?hl=en#zippy=%2Cdemographics-data";
+                    noDataInfo.textContent = "Limited data info";
+                    individualChartContainer.appendChild(noDataInfo);
                 }
 
                 var ctx = canvas.getContext('2d');
@@ -356,6 +368,10 @@ function createChannelPieChart(containerId, channelData) {
     } else {
         labels.push("Ikke nok data.");
         chartData.push(0);
+        var noDataInfo = document.createElement('a');
+        noDataInfo.href= "https://support.google.com/youtube/answer/9101241?hl=en#zippy=%2Cdemographics-data";
+        noDataInfo.textContent = "Limited data info";
+        container.parentNode.appendChild(noDataInfo);
     }
 
     new Chart(ctx, {
