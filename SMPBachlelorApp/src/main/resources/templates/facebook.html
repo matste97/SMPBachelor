@@ -6,11 +6,23 @@
     <title>Facebook</title>
     <link rel="stylesheet" type="text/css" th:href="@{/styles/styles.css}">
     <script th:src="@{/js/Navigation.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <body>
 <nav th:replace="components/navigation"></nav>
     <h1>FACEBOOK PAGE</h1>
-    <h2>NOT IMPLEMENTED YET</h2>
+    <h2>Dagelig demografi data</h2>
+    <!-- Canvas for Day Chart -->
+    <canvas id="dayChart" width="400" height="200"></canvas>
+    <h2>Ukentlig demografi data</h2>
+    <!-- Canvas for Week Chart -->
+    <canvas id="weekChart" width="400" height="200"></canvas>
+    <h2>Mådentlig demografi data</h2>
+    <!-- Canvas for 28 Days Chart -->
+    <canvas id="days28Chart" width="400" height="200"></canvas>
+
+    <!-- Include the external JavaScript file -->
+    <script src="../static/js/Facebook.js"></script>
 </body>
 </html>
