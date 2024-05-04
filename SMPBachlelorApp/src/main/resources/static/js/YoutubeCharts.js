@@ -153,6 +153,7 @@ function createVideoCharts(jsonData) {
 // chartComponent.js
 
 function createChannelChart(containerId, channelData) {
+    var data2 = JSON.parse(channelData);
     var data = JSON.parse(channelData).channelDemographic;
     var container = document.getElementById(containerId);
     var ctx = container.getContext('2d');
@@ -160,6 +161,16 @@ function createChannelChart(containerId, channelData) {
     var maleData = [];
     var femaleData = [];
     var userdefinedData = [];
+
+    var title = "";
+
+    if (data2.totalViews !== null && data2.totalViews !== undefined){
+        title = "Viewers totalt";
+    }
+    else{
+        title = "% av viewers";
+    }
+
 
 
     // Prepare data for chart
@@ -170,22 +181,34 @@ function createChannelChart(containerId, channelData) {
             if (!labels.includes(label)) {
                 labels.push(label);
             }
-
-            if (demographic.gender === 'male') {
-                maleData.push(demographic.viewerPercentage);
-            } else if (demographic.gender === 'female') {
-                femaleData.push(demographic.viewerPercentage);
+            if (data2.totalViews !== null && data2.totalViews !== undefined){
+                var total = Math.round(data2.totalViews*(demographic.viewerPercentage/100));
+                console.log(total);
+                if (demographic.gender === 'male') {
+                    maleData.push(total);
+                } else if (demographic.gender === 'female') {
+                    femaleData.push(total);
+                }
+                else{
+                    userdefinedData.push(total);
+                }
             }
-            else{
-                userdefinedData.push(demographic.viewerPercentage);
-            }
-        });
+            else {
+                if (demographic.gender === 'male') {
+                    maleData.push(demographic.viewerPercentage);
+                } else if (demographic.gender === 'female') {
+                    femaleData.push(demographic.viewerPercentage);
+                }
+                else{
+                    userdefinedData.push(demographic.viewerPercentage);
+                }}});
     } else {
         labels.push("Ikke nok data.");
         maleData.push(0);
         femaleData.push(0);
         userdefinedData.push(0);
         var noDataInfo = document.createElement('a');
+        noDataInfo.classList.add('datetime-info');
         noDataInfo.href= "https://support.google.com/youtube/answer/9101241?hl=en#zippy=%2Cdemographics-data";
         noDataInfo.textContent = "Limited data info";
         container.parentNode.appendChild(noDataInfo);
@@ -225,7 +248,7 @@ function createChannelChart(containerId, channelData) {
                     stacked: false,
                     title: {
                         display: true,
-                        text: '% av viewers'
+                        text: title
                     }
                 },
                 x: {
@@ -239,6 +262,7 @@ function createChannelChart(containerId, channelData) {
         }
     });
     var datetimeInfo = document.createElement('div');
+    datetimeInfo.classList.add('datetime-info');
     datetimeInfo.innerHTML = "Data sist hentet: " + JSON.parse(channelData).DateTimeGathered;
     container.parentNode.appendChild(datetimeInfo);
 }
@@ -345,6 +369,7 @@ function createVideoPieCharts(jsonData) {
 }
 
 function createChannelPieChart(containerId, channelData) {
+    var data2 = JSON.parse(channelData);
     var data = JSON.parse(channelData).channelDemographic;
     var container = document.getElementById(containerId);
     var ctx = container.getContext('2d');
@@ -359,7 +384,12 @@ function createChannelPieChart(containerId, channelData) {
             if (!labels.includes(label)) {
                 labels.push(label);
             }
-            chartData.push(demographic.viewerPercentage);
+            if (data2.totalViews !== undefined && data2.totalViews !== null){
+                chartData.push(Math.round(data2.totalViews * (demographic.viewerPercentage/100)));
+            } else{
+                chartData.push(demographic.viewerPercentage);
+            }
+
 
             data.push(demographic.viewerPercentage);
             backgroundColors.push(selectColor(index*10));
@@ -369,6 +399,7 @@ function createChannelPieChart(containerId, channelData) {
         labels.push("Ikke nok data.");
         chartData.push(0);
         var noDataInfo = document.createElement('a');
+        noDataInfo.classList.add('datetime-info'); // Add the clas
         noDataInfo.href= "https://support.google.com/youtube/answer/9101241?hl=en#zippy=%2Cdemographics-data";
         noDataInfo.textContent = "Limited data info";
         container.parentNode.appendChild(noDataInfo);
@@ -386,6 +417,7 @@ function createChannelPieChart(containerId, channelData) {
         }
     });
     var datetimeInfo = document.createElement('div');
+    datetimeInfo.classList.add('datetime-info');
     datetimeInfo.innerHTML = "Data sist hentet: " + JSON.parse(channelData).DateTimeGathered;
     container.parentNode.appendChild(datetimeInfo);
 }

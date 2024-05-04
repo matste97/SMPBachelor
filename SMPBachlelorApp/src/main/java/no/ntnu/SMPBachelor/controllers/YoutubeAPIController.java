@@ -32,10 +32,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -103,9 +106,10 @@ public class YoutubeAPIController {
 
     @GetMapping("/updateJsonAndRefresh")
     @ResponseBody
-    public ResponseEntity<?> updateJsonAndRefresh() throws GeneralSecurityException {
+    public ResponseEntity<?> updateJsonAndRefresh(@RequestParam("startDate") String startDate,
+                                                         @RequestParam("endDate") String endDate) throws GeneralSecurityException {
         try {
-            if ((getChannelGenderAgeDemographicLast30Days() == null) ||
+            if ((getChannelGenderAgeDemographicWithinTimePeriod(startDate, endDate) == null) ||
                     (getChannelGenderAgeDemographicAllTime() == null)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Feil med authentication, kontakt admin for autentisering.");
@@ -160,6 +164,19 @@ public class YoutubeAPIController {
                 item.put("viewerPercentage", viewerPercentage);
                 array.add(item);
             }
+            YouTubeAnalytics.Reports.Query totalViewsQuery = youTubeAnalytics.reports()
+                    .query();
+            QueryResponse totalViewsResponse = totalViewsQuery.setMetrics("views")
+                    .setIds("channel==MINE")
+                    .setStartDate("2000-01-01")  // Start date in the past
+                    .setEndDate(endDate)
+                    .execute();
+            List<List<Object>> totalViewsRows = totalViewsResponse.getRows();
+            BigDecimal totalViews;
+            if (totalViewsRows != null && totalViewsRows.size() > 0) {
+                totalViews = (BigDecimal) totalViewsRows.get(0).get(0);
+                json.put("totalViews", totalViews);
+            }
             json.put("channelDemographic", array);
 
             saveJsonObjectToFile(json, "InfoChannelDemographicAllTime");
@@ -168,16 +185,9 @@ public class YoutubeAPIController {
     }
 
 
-    public String getChannelGenderAgeDemographicLast30Days() throws IOException {
+    public String getChannelGenderAgeDemographicWithinTimePeriod(String startDate, String endDate) throws IOException {
 
-        LocalDate endDate = LocalDate.now();
-        // Calculate the start date by subtracting 30 days from today
-        LocalDate startDate = endDate.minusDays(30);
 
-        // Format dates to match the required format for the query
-        DateTimeFormatter formatterQuery = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedStartDate = startDate.format(formatterQuery);
-        String formattedEndDate = endDate.format(formatterQuery);
 
         //String message;
         JSONObject json = new JSONObject();
@@ -186,8 +196,8 @@ public class YoutubeAPIController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = currentTime.format(formatter);
         json.put("DateTimeGathered", formattedDateTime);
-        json.put("QueryStartTime", formattedStartDate);
-        json.put("QueryEndTime", formattedEndDate);
+        json.put("QueryStartTime", startDate);
+        json.put("QueryEndTime", endDate);
         // Assuming you have obtained the credential through the authorization process
         YouTubeAnalytics youTubeAnalyticsService = YoutubeAuth.getAnalyticsService();
         if(youTubeAnalyticsService == null){
@@ -198,8 +208,8 @@ public class YoutubeAPIController {
         QueryResponse response = request.setDimensions("channel")
                 .setIds("channel==MINE")
                 .setMetrics("viewerPercentage")
-                .setStartDate(formattedStartDate)  // Start date 30 days in the past
-                .setEndDate(formattedEndDate) //end date today
+                .setStartDate(startDate)  // Start date 30 days in the past
+                .setEndDate(endDate) //end date today
                 .setDimensions("ageGroup,gender")
                 .execute();
         List<List<Object>> rows = response.getRows();

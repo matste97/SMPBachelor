@@ -33,6 +33,7 @@ main button .spinner {
     justify-content: center;
     column-gap: 20%;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 #VideosChartContainer{

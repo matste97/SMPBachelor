@@ -9,6 +9,35 @@
   <title>Youtube</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var datePickerId = document.getElementById('datePickerId');
+      var today = new Date();
+      var formattedDate = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+      var monthAgo = new Date();
+      monthAgo.setDate(today.getDate() - 30);
+      var formattedDatePast = monthAgo.getFullYear() + '-' + ('0' + (monthAgo.getMonth() + 1)).slice(-2) + '-' + ('0' + monthAgo.getDate()).slice(-2);
+      datePickerId.max = formattedDate;
+      datePickerId.value = formattedDatePast;
+      datePickerId2.max = formattedDate;
+      datePickerId2.value = formattedDate;
+
+      var jsonData = JSON.parse(channel30DaysData);
+      var queryEndTime = reverseDateFormat(jsonData.QueryEndTime);
+      var queryStartTime = reverseDateFormat(jsonData.QueryStartTime);
+      periodInfo.textContent = "For periode: " + queryStartTime + " - " + queryEndTime;
+    });
+
+    function reverseDateFormat(dateString) {
+      // Split the date string by "-"
+      var parts = dateString.split("-");
+
+      // Rearrange the parts to form "dd-mm-yyyy"
+      var reversedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+
+      return reversedDate;
+    }
+  </script>
   <style>
     .spinner {
       border: 4px solid rgba(0, 0, 0, 0.1);
@@ -55,7 +84,11 @@
 <div id="ChannelChartsContainer">
 
   <div id="30DayContainer" class="channel-chart">
-    <h2>Kanaltrafikk siste 30 dager</h2>
+    <h2>Kanaltrafikk over valgt periode</h2>
+    <p>Velg periode (så hent på nytt):</p>
+    <input type="date" id="datePickerId" />
+    <input type="date" id="datePickerId2" />
+    <p id="periodInfo" class="datetime-info">For periode: </p>
     <canvas id="channelChart30Days" width="400" height="400"></canvas>
   </div>
   <div id="AllTimeContainer" class="channel-chart">
@@ -87,16 +120,29 @@
   $('#chartType').change(function() {
     var chartType = $(this).val(); // Get selected chart type from the dropdown
 
-    // need to destroy exsisting to add new ones
-    $('.channel-chart').remove();
+
+
+    document.getElementById('channelChart30Days').remove();
+    document.getElementById("channelChartAllTime").remove();
+    var datetimeInfoElements = document.getElementsByClassName('datetime-info');
+
+    var datetimeInfoArray = Array.from(datetimeInfoElements);
+    datetimeInfoArray.forEach(function(element) {
+      element.remove();
+    });
     $('.video-chart-container').remove();
 
-    $('#ChannelChartsContainer').append('<div id="30DayContainer" class="channel-chart">');
-    $('#ChannelChartsContainer').append('<div id="AllTimeContainer" class="channel-chart">');
-
-    $('#30DayContainer').append('<h2>Kanaltrafikk siste 30 dager</h2>');
-    $('#AllTimeContainer').append('<h2>Kanaltrafikk (All-time)</h2>');
     $('#AllTimeContainer').append('<canvas id="channelChartAllTime" width="400" height="400"></canvas>');
+
+    var jsonData = JSON.parse(channel30DaysData);
+    var queryEndTime = reverseDateFormat(jsonData.QueryEndTime);
+    var queryStartTime = reverseDateFormat(jsonData.QueryStartTime);
+
+    var periodInfo = $('<p>', {
+      'class': 'datetime-info',
+      'text': 'For periode: ' + queryStartTime + ' - ' + queryEndTime
+    });
+    $('#30DayContainer').append(periodInfo);
     $('#30DayContainer').append('<canvas id="channelChart30Days" width="400" height="400"></canvas>');
 
     // Create new charts based on selected type
@@ -122,10 +168,12 @@
 
       // Show loading spinner
       $('.spinner').show();
+      var startDate = $('#datePickerId').val();
+      var endDate = $('#datePickerId2').val();
 
       $.ajax({
         type: 'GET',
-        url: '/updateJsonAndRefresh',
+        url: '/updateJsonAndRefresh?startDate=' + startDate + '&endDate=' + endDate,
         success: function(response) {
           console.log(response);
           if (response.startsWith("Error")) {
@@ -140,7 +188,6 @@
           alert(xhr.responseText);
         },
         complete: function() {
-          // Hide loading spinner regardless of success or error
           $('.spinner').hide();
         }
       });
