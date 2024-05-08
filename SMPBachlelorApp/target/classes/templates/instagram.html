@@ -6,6 +6,8 @@
     <title>Instagram</title>
     <link rel="stylesheet" type="text/css" th:href="@{/styles/instagram.css}">
     <script th:src="@{/js/Navigation.js}"></script>
+    <script th:src="@{/js/Instagram.js}" th:attr="data-insightsData=${insightsData}"></script>
+
 </head>
 <body>
     <nav th:replace="~{components/navigation}"></nav>
@@ -35,5 +37,14 @@
     <div th:if="${latestPosts == null or latestPosts.size() == 0}">
         <p>Failed to retrieve latest posts.</p>
     </div>
+
+    <!-- Add a canvas element for the chart -->
+    <canvas id="insightsChart"></canvas>
+
+    <script th:inline="javascript">
+        console.log(insightsData)
+        createChart(insightsData)
+    </script>
+
 </body>
 </html>

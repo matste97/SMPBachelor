@@ -35,6 +35,13 @@ public class InstagramAPIController {
             Long followersCount = (Long) userData.get("followers_count");
             model.addAttribute("followersCount", followersCount);
 
+            // Define metrics to retrieve
+            String metrics = "impressions,reach,profile_views";
+            
+            // Retrieve insights data for the specified metrics
+            JSONArray insightsData = InstagramAuth.getInsightsData(accessToken, userId, metrics, "day");
+            model.addAttribute("insightsData", insightsData);
+
             // Retrieve latest Instagram posts
             JSONArray latestPosts = InstagramAuth.getLatestPosts(accessToken, userId, username);
             model.addAttribute("latestPosts", latestPosts);

@@ -106,5 +106,31 @@ public class InstagramAuth {
         System.out.println("Timestamp: " + timestamp);
         System.out.println();
     }
+
+    public static JSONArray getInsightsData(String accessToken, String userId, String metric, String period) throws IOException, ParseException {
+        HttpUrl url = HttpUrl.parse(INSTAGRAM_API_BASE_URL + userId + "/insights").newBuilder()
+                .addQueryParameter("metric", metric)
+                .addQueryParameter("period", period) // Include the period parameter
+                .addQueryParameter("access_token", accessToken)
+                .build();
+    
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+    
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected response code: " + response.code());
+            }
+            String responseBody = response.body().string();
+            JSONParser parser = new JSONParser();
+            JSONObject jsonResponse = (JSONObject) parser.parse(responseBody);
+            JSONArray data = (JSONArray) jsonResponse.get("data");
+            return data;
+        }
+    }
+    
+    
+    
     
 }
