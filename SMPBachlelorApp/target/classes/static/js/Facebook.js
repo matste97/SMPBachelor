@@ -1,12 +1,12 @@
 // Function to fetch data from the API and update the UI
 function fetchData() {
   // Specify the API endpoint and access token
-  const url = "https://graph.facebook.com/v12.0/241422063738/insights/page_impressions_by_age_gender_unique";
-  const accessToken = "Placeholder";
+  const url1 = "https://graph.facebook.com/v12.0/241422063738/insights/page_impressions_by_age_gender_unique";
+  const accessToken = "EAAWzrb7k2f0BO0t0rZCEjaqtp0TYI5mr3zBcgdFG5zLCnNoGjvHZAtosxlnCXwdL4xGBQ3KQLqLQpJWC7FCPQAv4zrARQkuFLqqdDQzCjcHSX4OjkFTkwFteiZC902apslbTEdZAF9j2ahpZBJEhDfMLcKnhYNqepDGAPwYZBUZBu7FKDjv0kS4KQSMLiaRcwZDZD";
 
 
   // Make the API call using fetch
-  fetch(`${url}?access_token=${accessToken}`)
+  fetch(`${url1}?access_token=${accessToken}`)
       .then(response => {
           if (!response.ok) {
               throw new Error('Network response was not ok');
@@ -118,7 +118,7 @@ new Chart(ctx, {
 
 // Function to create toggle buttons for each gender
 function createToggleButtons(chartData, chartId) {
-const buttonContainer = document.createElement('div');
+const buttonContainer = document.createElement('a');
 buttonContainer.classList.add('toggle-buttons');
 
 chartData.datasets.forEach(dataset => {
@@ -139,5 +139,88 @@ const canvasContainer = document.getElementById(chartId).parentNode;
 canvasContainer.insertBefore(buttonContainer, canvasContainer.firstChild);
 }
 
-// Call the fetchData function when the page loads
-window.onload = fetchData;
+
+
+
+//Making a second api call for cities
+//Making a second api call for cities
+//Making a second api call for cities
+
+
+
+// Function to fetch data from the second API and update the UI with tables
+function fetchSecondData() {
+  // Specify the second API endpoint and access token
+  const url = "https://graph.facebook.com/v12.0/241422063738/insights/page_impressions_by_city_unique";
+  const accessToken = "EAAWzrb7k2f0BO0t0rZCEjaqtp0TYI5mr3zBcgdFG5zLCnNoGjvHZAtosxlnCXwdL4xGBQ3KQLqLQpJWC7FCPQAv4zrARQkuFLqqdDQzCjcHSX4OjkFTkwFteiZC902apslbTEdZAF9j2ahpZBJEhDfMLcKnhYNqepDGAPwYZBUZBu7FKDjv0kS4KQSMLiaRcwZDZD";
+
+  // Make the API call using fetch
+  fetch(`${url}?access_token=${accessToken}`)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(responseData => {
+          // Process table data from the response
+          const tableData = processTableData(responseData);
+          
+          // Update UI with tables
+          createTable(tableData);
+      })
+      .catch(error => {
+          console.error("Error fetching or processing data:", error);
+      });
+}
+
+// Function to process table data from the second API response
+function processTableData(responseData) {
+  // Extract the data from the response
+  const data = responseData.data[0].values[0].value;
+
+  // Convert the data object into an array of objects
+  const tableData = Object.entries(data).map(([city, impressions]) => ({ city, impressions }));
+
+      // Sort the table data by impressions in descending order
+      tableData.sort((a, b) => b.impressions - a.impressions);
+
+  return tableData;
+}
+
+// Function to create a table
+function createTable(data) {
+  const tableContainer = document.getElementById('secondTableContainer');
+  const table = document.createElement('table');
+
+  // Create table header
+  const headerRow = document.createElement('tr');
+  const cityHeader = document.createElement('th');
+  cityHeader.textContent = 'Byer';
+  const impressionsHeader = document.createElement('th');
+  impressionsHeader.textContent = 'Visninger';
+  headerRow.appendChild(cityHeader);
+  headerRow.appendChild(impressionsHeader);
+  table.appendChild(headerRow);
+
+  // Create table rows
+  data.forEach(item => {
+      const row = document.createElement('tr');
+      const cityCell = document.createElement('td');
+      cityCell.textContent = item.city;
+      const impressionsCell = document.createElement('td');
+      impressionsCell.textContent = item.impressions;
+      row.appendChild(cityCell);
+      row.appendChild(impressionsCell);
+      table.appendChild(row);
+  });
+
+  tableContainer.appendChild(table);
+}
+
+
+// Starter function når du åpner siden
+window.onload = function(){
+fetchData();
+fetchSecondData();
+}

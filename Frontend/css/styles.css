@@ -75,3 +75,34 @@ canvas{
     padding: 2%;
 }
 
+div{
+    margin-bottom: 10%;
+    padding: 2%;
+}
+
+/* CSS styles for tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px; /* Add some spacing between tables */
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd; /* Add bottom border to table cells */
+}
+
+th {
+    background-color: #f2f2f2; /* Gray background color for table headers */
+}
+
+/* Style alternating rows */
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Light gray background color for even rows */
+}
+
+/* Hover effect */
+tr:hover {
+    background-color: #f2f2f2; /* Lighter background color on hover */
+}
