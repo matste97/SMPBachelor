@@ -2,7 +2,7 @@
 function fetchData() {
   // Specify the API endpoint and access token
   const url1 = "https://graph.facebook.com/v12.0/241422063738/insights/page_impressions_by_age_gender_unique";
-  const accessToken = "EAAWzrb7k2f0BO0t0rZCEjaqtp0TYI5mr3zBcgdFG5zLCnNoGjvHZAtosxlnCXwdL4xGBQ3KQLqLQpJWC7FCPQAv4zrARQkuFLqqdDQzCjcHSX4OjkFTkwFteiZC902apslbTEdZAF9j2ahpZBJEhDfMLcKnhYNqepDGAPwYZBUZBu7FKDjv0kS4KQSMLiaRcwZDZD";
+  const accessToken = "Placeholder";
 
 
   // Make the API call using fetch
@@ -152,7 +152,7 @@ canvasContainer.insertBefore(buttonContainer, canvasContainer.firstChild);
 function fetchSecondData() {
   // Specify the second API endpoint and access token
   const url = "https://graph.facebook.com/v12.0/241422063738/insights/page_impressions_by_city_unique";
-  const accessToken = "EAAWzrb7k2f0BO0t0rZCEjaqtp0TYI5mr3zBcgdFG5zLCnNoGjvHZAtosxlnCXwdL4xGBQ3KQLqLQpJWC7FCPQAv4zrARQkuFLqqdDQzCjcHSX4OjkFTkwFteiZC902apslbTEdZAF9j2ahpZBJEhDfMLcKnhYNqepDGAPwYZBUZBu7FKDjv0kS4KQSMLiaRcwZDZD";
+  const accessToken = "Placeholder";
 
   // Make the API call using fetch
   fetch(`${url}?access_token=${accessToken}`)
