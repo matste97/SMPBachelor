@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facebook</title>
     <link rel="stylesheet" type="text/css" th:href="@{/styles/styles.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/stylesFacebook.css}">
     <script th:src="@{/js/Navigation.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -14,17 +15,17 @@
     <h1>FACEBOOK PAGE</h1>
     <h2>Daglig demografi data</h2>
     <!-- Canvas for Day Chart -->
-    <fChart id="dayChart" width="400" height="200"></fChart>
+    <canvas id="dayChart" width="400" height="200"></canvas>
     <h2>Ukentlig demografi data</h2>
     <!-- Canvas for Week Chart -->
-    <fChart id="weekChart" width="400" height="200"></fChart>
+    <canvas id="weekChart" width="400" height="200"></canvas>
     <h2>Månedlig demografi data</h2>
     <!-- Canvas for 28 Days Chart -->
-    <fChart id="days28Chart" width="400" height="200"></fChart>
+    <canvas id="days28Chart" width="400" height="200"></canvas>
 
     <!-- Container for the table -->
     <h2>Hvilke byer leser SMP innlegg</h2>
-    <tableCity id="secondTableContainer"></tableCity>
+    <div id="secondTableContainer"></div>
     
     <h2><a href="https://business.facebook.com/latest/insights/content?asset_id=241422063738&ad_account_id=120203253331210352&entity_type=FB_PAGE&audience_tab=trends" target="_blank" style="color: rgba(0, 73, 160, 1); text-decoration: none;">Link til individuelle Poster</a></h2>
 
