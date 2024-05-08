@@ -70,12 +70,12 @@ body {
     gap: 20px; 
 }
 
-canvas{
+.fChart{
     margin-bottom: 10%;
     padding: 2%;
 }
 
-div{
+.tableCity{
     margin-bottom: 10%;
     padding: 2%;
 }
