@@ -105,21 +105,21 @@ function createVideoCharts(jsonData) {
                             label: 'Mann',
                             data: chartDataMale,
                             backgroundColor: 'rgba(54, 162, 235, 0.5)', // Blue color
-                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderColor: 'rgba(0, 0, 0, 1)', // Use black for border
                             borderWidth: 1
                         },
                             {
                                 label: 'Kvinne',
                                 data: chartDataFemale,
                                 backgroundColor: 'rgba(255, 99, 132, 0.5)', // Red color
-                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderColor: 'rgba(0, 0, 0, 1)', // Use black for border
                                 borderWidth: 1
                             },
                             {
                                 label: 'Brukerdefinert',
                                 data: chartDataUserDefined,
                                 backgroundColor: 'rgba(57,161,53,0.5)', // Green color
-                                borderColor: 'rgba(57,161,53,1)',
+                                borderColor: 'rgba(0, 0, 0, 1)', // Use black for border
                                 borderWidth: 1
                             }]
                     },
@@ -223,21 +223,21 @@ function createChannelChart(containerId, channelData) {
                 label: 'Mann',
                 data: maleData,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)', // Blue color
-                borderColor: 'rgba(54, 162, 235, 1)',
+                borderColor: 'rgba(0, 0, 0, 1)', // Use black for border
                 borderWidth: 1
             },
                 {
                     label: 'Kvinne',
                     data: femaleData,
                     backgroundColor: 'rgba(255, 99, 132, 0.5)', // Red color
-                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderColor: 'rgba(0, 0, 0, 1)', // Use black for border
                     borderWidth: 1
                 },
                 {
                     label: 'Brukerdefinert',
                     data: userdefinedData,
                     backgroundColor: 'rgba(57,161,53,0.5)', // Green color
-                    borderColor: 'rgba(57,161,53,1)',
+                    borderColor: 'rgba(0, 0, 0, 1)', // Use black for border
                     borderWidth: 1
                 }]
         },
