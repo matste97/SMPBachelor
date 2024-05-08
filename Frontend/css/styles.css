@@ -70,3 +70,8 @@ body {
     gap: 20px; 
 }
 
+canvas{
+    margin-bottom: 10%;
+    padding: 2%;
+}
+

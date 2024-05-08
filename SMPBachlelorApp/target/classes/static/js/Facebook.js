@@ -1,104 +1,143 @@
 // Function to fetch data from the API and update the UI
 function fetchData() {
-    // Specify the API endpoint and access token
-    const url = "https://graph.facebook.com/v12.0/241422063738/insights/page_impressions_by_age_gender_unique";
-    const accessToken = "Placeholder";
+  // Specify the API endpoint and access token
+  const url = "https://graph.facebook.com/v12.0/241422063738/insights/page_impressions_by_age_gender_unique";
+  const accessToken = "Placeholder";
 
 
-    // Make the API call using fetch
-    fetch(`${url}?access_token=${accessToken}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(responseData => {
-            // Extract necessary data from the response
-            const data = responseData.data;
+  // Make the API call using fetch
+  fetch(`${url}?access_token=${accessToken}`)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(responseData => {
+          // Extract necessary data from the response
+          const data = responseData.data;
 
-            // Filter data for different time periods
-            const dayData = data.find(entry => entry.period === 'day');
-            const weekData = data.find(entry => entry.period === 'week');
-            const days28Data = data.find(entry => entry.period === 'days_28');
+          // Filter data for different time periods
+          const dayData = data.find(entry => entry.period === 'day');
+          const weekData = data.find(entry => entry.period === 'week');
+          const days28Data = data.find(entry => entry.period === 'days_28');
 
-            // Function to extract labels and values from filtered data
-            const extractData = (entry) => {
-                const valuesData = entry.values[0].value;
-                const labels = Object.keys(valuesData);
-                const values = Object.values(valuesData);
+          // Function to extract labels and values from filtered data
+const extractData = (entry) => {
+  const valuesData = entry.values[0].value;
+  const groupedData = {};
 
-                // Define custom sorting order for labels
-                const customOrder = ['F.13-17', 'M.13-17', 'U.13-17', 'F.18-24', 'M.18-24', 'U.18-24', 'F.25-34', 'M.25-34', 'U.25-34', 'F.35-44', 'M.35-44', 'U.35-44', 'F.45-54', 'M.45-54', 'U.45-54', 'F.55-64', 'M.55-64', 'U.55-64', 'F.65+', 'M.65+', 'U.65+'];
+  // Group data by gender
+  Object.keys(valuesData).forEach(label => {
+      const ageGroup = label.slice(2); // Extract age group (remove gender)
+      const gender = label[0]; // Extract the first character (gender)
+      if (!groupedData[gender]) {
+          groupedData[gender] = [];
+      }
+      groupedData[gender].push({ label: ageGroup, value: valuesData[label] });
+  });
 
-                // Create an array of objects with label and value pairs
-                const dataPairs = labels.map((label, index) => ({ label, value: values[index] }));
+  // Define custom order for age groups
+  const customOrder = ['13-17', '18-24', '25-34', '35-44', '45-54', '55-64', '65+'];
 
-                // Sort the array based on custom order of labels
-                dataPairs.sort((a, b) => customOrder.indexOf(a.label) - customOrder.indexOf(b.label));
+  // Create an array of objects with label and value pairs
+  const datasets = Object.keys(groupedData).map(gender => {
+      const data = customOrder.map(ageGroup => {
+          const found = groupedData[gender].find(item => item.label === ageGroup);
+          return found ? found.value : 0;
+      });
+      return { label: gender, data: data };
+  });
 
-                // Extract sorted labels and values from the sorted array
-                const sortedLabels = dataPairs.map(pair => pair.label);
-                const sortedValues = dataPairs.map(pair => pair.value);
+  // Extract sorted labels from custom order
+  const sortedLabels = customOrder;
 
-                return { labels: sortedLabels, values: sortedValues };
-            };
+  return { labels: sortedLabels, datasets: datasets };
+};
 
-            // Extract data for different time periods
-            const dayChartData = extractData(dayData);
-            const weekChartData = extractData(weekData);
-            const days28ChartData = extractData(days28Data);
 
-            // Color mapping for different data types
-            const colorMap = {
-                F: 'rgba(255, 0, 0, 0.2)', // Red for Female
-                U: 'rgba(0, 255, 0, 0.2)', // Green for Unknown
-                M: 'rgba(0, 0, 255, 0.2)', // Blue for Male
-                
-            };
+          // Extract data for different time periods
+          const dayChartData = extractData(dayData);
+          const weekChartData = extractData(weekData);
+          const days28ChartData = extractData(days28Data);
 
-            // Create separate charts with different colors
-            createChart('dayChart', 'Page Impressions by Age and Gender (Day)', dayChartData.labels, dayChartData.values, colorMap);
-            createChart('weekChart', 'Page Impressions by Age and Gender (Week)', weekChartData.labels, weekChartData.values, colorMap);
-            createChart('days28Chart', 'Page Impressions by Age and Gender (28 Days)', days28ChartData.labels, days28ChartData.values, colorMap);
-        })
-        .catch(error => {
-            console.error("Error fetching or processing data:", error);
-        });
+          // Color mapping for different data types
+          const colorMap = {
+              F: 'rgba(255, 99, 132, 0.5)', // Red for Female
+              U: 'rgba(57,161,53,0.5', // Green for Unknown
+              M: 'rgba(54, 162, 235, 0.5)', // Blue for Male
+              
+          };
+
+          // Create separate charts with different colors
+          createChart('dayChart', 'Dag', dayChartData.labels, dayChartData.datasets, colorMap);
+          createChart('weekChart', 'Uke', weekChartData.labels, weekChartData.datasets, colorMap);
+          createChart('days28Chart', 'Måned', days28ChartData.labels, days28ChartData.datasets, colorMap);
+
+          // Create toggle buttons
+          createToggleButtons(dayChartData, 'dayChart');
+          createToggleButtons(weekChartData, 'weekChart');
+          createToggleButtons(days28ChartData, 'days28Chart');
+      })
+      .catch(error => {
+          console.error("Error fetching or processing data:", error);
+      });
 }
 
 // Function to create a Chart.js instance with dynamic colors
-function createChart(canvasId, title, labels, values, colorMap) {
-  const ctx = document.getElementById(canvasId).getContext('2d');
-  const backgroundColor = [];
-  for (let i = 0; i < labels.length; i++) {
-    const label = labels[i];
-    const firstChar = label[0];
-    backgroundColor.push(colorMap[firstChar]);
-  }
+function createChart(canvasId, title, labels, datasets, colorMap) {
+const ctx = document.getElementById(canvasId).getContext('2d');
+const backgroundColor = [];
+datasets.forEach(dataset => {
+  const firstChar = dataset.label[0];
+  backgroundColor.push(colorMap[firstChar]);
+});
 
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: title,
-        data: values,
-        backgroundColor: backgroundColor,
-        borderColor: 'rgba(0, 0, 0, 1)', // Use black for border
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: datasets.map(dataset => ({
+      label: dataset.label,
+      data: dataset.data,
+      backgroundColor: colorMap[dataset.label[0]],
+      borderColor: 'rgba(0, 0, 0, 1)', // Use black for border
+      borderWidth: 1,
+      hidden: dataset.hidden // Initially hide if specified
+    }))
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
       }
     }
-  });
+  }
+});
 }
 
+// Function to create toggle buttons for each gender
+function createToggleButtons(chartData, chartId) {
+const buttonContainer = document.createElement('div');
+buttonContainer.classList.add('toggle-buttons');
+
+chartData.datasets.forEach(dataset => {
+  const button = document.createElement('button');
+  button.textContent = dataset.label;
+  button.classList.add('toggle-button');
+  button.addEventListener('click', () => {
+    const chart = Chart.getChart(chartId);
+    const index = chart.data.datasets.findIndex(ds => ds.label === dataset.label);
+    if (index !== -1) {
+      chart.getDatasetMeta(index).hidden = !chart.getDatasetMeta(index).hidden;
+      chart.update();
+    }
+  });
+});
+
+const canvasContainer = document.getElementById(chartId).parentNode;
+canvasContainer.insertBefore(buttonContainer, canvasContainer.firstChild);
+}
 
 // Call the fetchData function when the page loads
 window.onload = fetchData;
