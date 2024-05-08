@@ -32,13 +32,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -49,10 +46,17 @@ public class YoutubeAPIController {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
+    /**
+     *  Get the client secret upload form
+     */
+
     @GetMapping("/upload")
     public String showUploadForm() {
         return "uploadForm";
     }
+    /**
+     * Client secret upload form, let's the user upload their client secret then redirect to authorization afterwards
+     */
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         if (!file.isEmpty()) {
@@ -75,7 +79,9 @@ public class YoutubeAPIController {
         // Redirect back to the upload page if there's an error or if the file is empty
         return "redirect:/upload";
     }
-
+    /**
+     *  Get the youtube demographic mainpage, displays the info about latest videos and channel traffic.
+     */
 
     @GetMapping("/youtube")
     public String youtubePage(Model model) {
@@ -103,7 +109,9 @@ public class YoutubeAPIController {
         return "Youtube";
     }
 
-
+    /**
+     *  Run queries and save data to json files
+     */
     @GetMapping("/updateJsonAndRefresh")
     @ResponseBody
     public ResponseEntity<?> updateJsonAndRefresh(@RequestParam("startDate") String startDate,
@@ -122,7 +130,9 @@ public class YoutubeAPIController {
         }
     }
 
-
+    /**
+     *  Run query to get the Gender and Age Groups for the channel all time.
+     */
 
     public String getChannelGenderAgeDemographicAllTime() throws IOException {
         LocalDate today = LocalDate.now();
@@ -184,10 +194,11 @@ public class YoutubeAPIController {
         return "Finished saving";
     }
 
+    /**
+     *  Run query to get the Gender and Age Groups for the channel for a specific time period
+     */
 
     public String getChannelGenderAgeDemographicWithinTimePeriod(String startDate, String endDate) throws IOException {
-
-
 
         //String message;
         JSONObject json = new JSONObject();
@@ -289,6 +300,10 @@ public class YoutubeAPIController {
         return videoIds;
     }
 
+    /**
+     *  Run query to get the Gender and Age Groups for video
+     */
+
     public JSONArray getVideoAgeAndGenderData(String videoId) throws IOException {
         LocalDate endDate = LocalDate.now();
         // Format dates to match the required format for the query
@@ -332,6 +347,10 @@ public class YoutubeAPIController {
         return array;
     }
 
+    /**
+     *  Run query to get video title
+     */
+
     public String getVideoTitle(String videoId) throws IOException{
         YouTube youTubeService = YoutubeAuth.getService();
         if (youTubeService == null){
@@ -346,6 +365,10 @@ public class YoutubeAPIController {
                 .getSnippet()
                 .getTitle();
     }
+
+    /**
+     *  Run query to get a video's total views
+     */
 
     public BigInteger getVideoTotalViews(String videoId) throws IOException{
         YouTube youTubeService = YoutubeAuth.getService();
@@ -363,6 +386,9 @@ public class YoutubeAPIController {
                 .getViewCount();
 }
 
+    /**
+     *  Run query to get an url to the video's thumbnail
+     */
 
     public String getThumbnailUrl(String videoId) throws IOException{
         YouTube youTubeService = YoutubeAuth.getService();
@@ -379,7 +405,9 @@ public class YoutubeAPIController {
                 .getSnippet()
                 .getThumbnails().getMedium().getUrl();
     }
-
+    /**
+     *  Run query to get a video's average view time in seconds and percentage
+     */
     public JSONArray getAvgViewTime(String videoId) throws IOException{
         LocalDate endDate = LocalDate.now();
         // Format dates to match the required format for the query
@@ -416,6 +444,9 @@ public class YoutubeAPIController {
         return array;
     }
 
+    /**
+     *  Run queries to get information about the latest videos
+     */
 
     public void saveLatestVideosInfoToJSON() throws IOException, GeneralSecurityException {
         JSONObject json = new JSONObject();
@@ -425,7 +456,7 @@ public class YoutubeAPIController {
         String formattedDateTime = currentTime.format(formatter);
         json.put("DateTimeGathered", formattedDateTime);
         int videoNumber = 1; //initial id
-        List<String> videoIDList = getLatestVideoIds();
+        List<String> videoIDList = getLatestVideoIds();//videos to get info for
         for (String videoID:videoIDList) {
                 String videoTitle = getVideoTitle(videoID);
                 BigInteger videoViews = getVideoTotalViews(videoID);
@@ -446,6 +477,10 @@ public class YoutubeAPIController {
         saveJsonObjectToFile(json, "InfoLatestVideos");
     }
 
+    /**
+     *  Save a json object to a file
+     */
+
     public void saveJsonObjectToFile(JSONObject jsonObject, String fileName) throws IOException {
 
         // Define the directory path
@@ -465,7 +500,10 @@ public class YoutubeAPIController {
             System.out.println("JSON object successfully saved to: " + filePath);
         }
     }
-
+    /**
+     *  Get mapping for authorization, reads the authorization url for google from the client secrets file.
+     *  Redirects to upload clients secrets if file does not exist
+     */
 
     @GetMapping("/authorize")
     public RedirectView authorizeInBrowser() throws IOException {
@@ -477,6 +515,10 @@ public class YoutubeAPIController {
             return new RedirectView("/upload");
         }
     }
+
+    /**
+     *  Get mapping for callback from authorization, authorizes youtube api calls
+     */
 
     @GetMapping("/Callback")
     public String callback(@RequestParam("code") String code) throws IOException{
