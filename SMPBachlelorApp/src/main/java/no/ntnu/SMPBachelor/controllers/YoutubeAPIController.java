@@ -524,6 +524,6 @@ public class YoutubeAPIController {
     public String callback(@RequestParam("code") String code) throws IOException{
         YoutubeAuth youtubeAuth = new YoutubeAuth();
         youtubeAuth.authorize(code);
-        return "redirect:/";
+        return "redirect:/youtube";
     }
 }
