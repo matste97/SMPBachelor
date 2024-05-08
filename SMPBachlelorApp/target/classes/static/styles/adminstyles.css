@@ -81,6 +81,9 @@ button:hover {
 }
 .username{
     align-content: center;
+    overflow-wrap: break-word;
+    width: 50%;
+    text-align: left;
 }
 
 
