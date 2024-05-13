@@ -10,11 +10,21 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script></head>
 <body>
     <nav th:replace="~{components/navigation}"></nav>
-    <h1>INSTAGRAM PAGE</h1>
+    <h1>INSTAGRAM</h1>
     <!-- Display the follower count -->
     <h2 th:if="${followersCount != null}" th:text="'Følgere: ' + ${followersCount}"></h2>
     <!-- Handle the case when follower count is not available -->
     <h2 th:if="${followersCount == null}">Follower count not available</h2>
+
+     <!-- Add a canvas element for the chart -->
+     <canvas id="insightsChart"></canvas>
+
+     <script th:inline="javascript">
+         var insightsData = /*[[${insightsData}]]*/ [];
+         createChart(insightsData);
+     </script>
+
+     <h1>Siste 10 media objekter</h1>
     
     <div class="grid-container" th:if="${latestPosts != null and latestPosts.size() > 0}">
         <div class="grid-item" th:each="post : ${latestPosts}">
@@ -22,12 +32,15 @@
             <div th:if="${post.media_url != null}">
                 <!-- Display thumbnail -->
                 <img class="thumbnail" th:if="${post.media_type == 'IMAGE'}" th:src="${post.media_url}" th:alt="${post.caption} ? ${post.caption} : 'Missing thumbnail'"/> 
-                <img class="thumbnail" th:if="${post.media_type != 'IMAGE'}" src="/path/to/placeholder_thumbnail.jpg" alt="Placeholder Thumbnail"/> 
+                <img class="thumbnail" th:if="${post.media_type != 'IMAGE'}" img th:src="@{img/missingthumbnail.png}" alt="missing thumbnail">
             </div>
-            <!-- Display caption -->
-            <div>
-                <div class="caption" th:if="${post.caption != null}" th:text="${post.caption}"></div> 
-                <div th:text="${post.timestamp}"></div> 
+
+            <!-- Display caption, comment- and like count, and timestamp -->
+            <div class="caption" th:if="${post.caption != null}" th:text="${post.caption}"></div>
+            <div class="media-text">
+                <div>Kommentarer: <span th:text="${post.comments_count}"></span></div>
+                <div>Likes: <span th:text="${post.like_count}"></span></div>
+                <div th:text="${post.formattedTimestamp}"></div>
             </div>
         </div>
     </div>
@@ -36,20 +49,6 @@
     <div th:if="${latestPosts == null or latestPosts.size() == 0}">
         <p>Failed to retrieve latest posts.</p>
     </div>
-
-    <!-- Output insightsData for debugging -->
-    <pre th:text="${insightsData != null ? #strings.arrayJoin(insightsData, '\n') : 'Insights Data is null'}"></pre>
-
-    <!-- Add a canvas element for the chart -->
-    <canvas id="insightsChart"></canvas>
-
-    <script th:inline="javascript">
-        var insightsData = /*[[${insightsData}]]*/ [];
-        createChart(insightsData);
-    </script>
-    
-    
-
 
 </body>
 </html>

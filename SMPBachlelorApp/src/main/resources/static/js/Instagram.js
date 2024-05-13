@@ -1,6 +1,13 @@
 function createChart(insightsData) {
+    const labelTranslations = {
+        "impressions": "Inntrykk",
+        "reach": "Unike inntrykk",
+        "profile_views": "Profilvisninger"
+    };
+
+    // Map the original labels to their translated versions
     var labels = insightsData.map(function(item) {
-        return item.name;
+        return labelTranslations[item.name];
     });
 
     var values = insightsData.map(function(item) {
@@ -15,7 +22,7 @@ function createChart(insightsData) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Insights Data',
+                label: 'Sunnmoersposten',
                 data: values,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',

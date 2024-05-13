@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import no.ntnu.SMPBachelor.security.InstagramAuth;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
 public class InstagramAPIController {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(InstagramAPIController.class);
 
     @GetMapping("/instagram")
@@ -37,13 +39,22 @@ public class InstagramAPIController {
 
             // Define metrics to retrieve
             String metrics = "impressions,reach,profile_views";
-            
+
             // Retrieve insights data for the specified metrics
             JSONArray insightsData = InstagramAuth.getInsightsData(accessToken, userId, metrics, "day");
             model.addAttribute("insightsData", insightsData);
 
             // Retrieve latest Instagram posts
             JSONArray latestPosts = InstagramAuth.getLatestPosts(accessToken, userId, username);
+
+            // Format timestamp before adding to the model
+            for (Object obj : latestPosts) {
+                JSONObject post = (JSONObject) obj;
+                String timestamp = (String) post.get("timestamp");
+                String formattedTimestamp = formatTimestamp(timestamp);
+                post.put("formattedTimestamp", formattedTimestamp);
+            }
+
             model.addAttribute("latestPosts", latestPosts);
 
         } catch (IOException | ParseException e) {
@@ -54,5 +65,19 @@ public class InstagramAPIController {
 
         // Return the Thymeleaf template
         return "instagram";
+    }
+
+    // Method to format timestamps on media objects
+    private String formatTimestamp(String timestamp) {
+        try {
+            SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            Date date = sdfInput.parse(timestamp);
+
+            SimpleDateFormat sdfOutput = new SimpleDateFormat("dd.MM.yyyy | HH:mm");
+            return sdfOutput.format(date);
+        } catch (java.text.ParseException e) {
+            logger.error("Error occurred while formatting timestamp: {}", e.getMessage());
+            return "Timestamp formatting error";
+        }
     }
 }

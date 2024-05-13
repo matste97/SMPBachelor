@@ -81,16 +81,28 @@ nav h3 {
     flex-direction: column;
 }
 
-.caption-container {
+.media-text {
     width: 100%;
     height: auto;
 }
 
+.media-text {
+   font-size: 14px;
+}
+
 .caption {
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    margin-top: 5px;
-    font-size: 12px; 
-    max-width: 150px; 
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    margin-top: 5px; 
+    font-size: 12px;
+    max-width: 150px;
+}
+
+.caption::after {
+    content: "...";
+    position: relative;
+    top: -1px;
 }

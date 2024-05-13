@@ -40,7 +40,7 @@ public class InstagramAuth {
     public static JSONArray getLatestPosts(String accessToken, String userId, String username) throws IOException, ParseException {
         try {
             HttpUrl url = HttpUrl.parse(INSTAGRAM_API_BASE_URL + userId).newBuilder()
-                    .addQueryParameter("fields", "business_discovery.username(" + username + "){media.limit(10){id,media_type,media_url,caption,permalink,timestamp}}")
+                    .addQueryParameter("fields", "business_discovery.username(" + username + "){media.limit(10){id,media_type,media_url,caption,permalink,timestamp,comments_count,like_count}}")
                     .addQueryParameter("access_token", accessToken)
                     .build();
     
