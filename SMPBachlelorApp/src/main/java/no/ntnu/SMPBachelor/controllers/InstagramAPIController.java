@@ -44,6 +44,10 @@ public class InstagramAPIController {
             JSONArray insightsData = InstagramAuth.getInsightsData(accessToken, userId, metrics, "day");
             model.addAttribute("insightsData", insightsData);
 
+             // Retrieve insights about followers' age and genders
+            JSONArray followersAgeAndGenderInsightsData = InstagramAuth.getFollowersAgeAndGenderInsights(accessToken, userId);
+            model.addAttribute("followersAgeAndGenderInsights", followersAgeAndGenderInsightsData);
+
             // Retrieve latest Instagram posts
             JSONArray latestPosts = InstagramAuth.getLatestPosts(accessToken, userId, username);
 
