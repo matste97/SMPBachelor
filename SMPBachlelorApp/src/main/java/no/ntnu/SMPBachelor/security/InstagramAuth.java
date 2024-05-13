@@ -110,7 +110,7 @@ public class InstagramAuth {
     public static JSONArray getInsightsData(String accessToken, String userId, String metric, String period) throws IOException, ParseException {
         HttpUrl url = HttpUrl.parse(INSTAGRAM_API_BASE_URL + userId + "/insights").newBuilder()
                 .addQueryParameter("metric", metric)
-                .addQueryParameter("period", period) // Include the period parameter
+                .addQueryParameter("period", period) 
                 .addQueryParameter("access_token", accessToken)
                 .build();
     
