@@ -13,6 +13,9 @@ public class FacebookAPIController {
             description = "Displays the facebook page"
     )
     public String facebook(Model model) {
+
+        String apiKey = System.getenv("Facebook_Access_Token");
+        model.addAttribute("apiKey", apiKey);
         return "facebook";
     }
 }

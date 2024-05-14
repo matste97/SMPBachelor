@@ -2,8 +2,7 @@
 function fetchData() {
     // Specify the API endpoint and access token
     const url = "https://graph.facebook.com/v12.0/241422063738/insights/page_impressions_by_age_gender_unique";
-    const accessToken = "Placeholder";
-
+    const accessToken = apiKey;
 
     // Make the API call using fetch
     fetch(`${url}?access_token=${accessToken}`)
