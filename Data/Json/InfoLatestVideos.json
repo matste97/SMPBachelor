@@ -1,153 +1,220 @@
 {
   "1" : {
-    "videoDemographic" : [{
-        "gender" : "male",
-        "ageGroup" : "age13-17",
-        "viewerPercentage" : 25
-      }, {
-        "gender" : "male",
-        "ageGroup" : "age18-24",
-        "viewerPercentage" : 15
-      }, {
-        "gender" : "male",
-        "ageGroup" : "age25-34",
-        "viewerPercentage" : 10
-      },{
-        "gender" : "female",
-        "ageGroup" : "age13-17",
-        "viewerPercentage" : 30
-      }, {
-        "gender" : "female",
-        "ageGroup" : "age18-24",
-        "viewerPercentage" : 15
-      }, {
-        "gender" : "female",
-        "ageGroup" : "age25-34",
-        "viewerPercentage" : 5
-      }],
-    "totalVideoViews" : 3,
-    "videoId" : "2G-lDVDic90",
-    "videoTitle" : "We are trying to have a conversation here"
+    "videoDemographic" : [ {
+    "gender" : "male",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 15
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 5
+  },{
+    "gender" : "female",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 20
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 10
+  } ],
+    "thumbnail" : "https://i.ytimg.com/vi/KdEeNw2p1RU/mqdefault.jpg",
+    "totalVideoViews" : 5,
+    "videoId" : "pJSAVo3EFa4",
+    "avgView" : [ {
+    "gender" : "male",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 15
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 5
+  },{
+    "gender" : "female",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 20
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 10
+  } ],
+    "videoTitle" : "Test 1"
   },
   "2" : {
-    "videoDemographic" : [{
-      "gender" : "male",
-      "ageGroup" : "age13-17",
-      "viewerPercentage" : 25
-    }, {
-      "gender" : "male",
-      "ageGroup" : "age18-24",
-      "viewerPercentage" : 15
-    }, {
-      "gender" : "male",
-      "ageGroup" : "age25-34",
-      "viewerPercentage" : 10
-    },{
-      "gender" : "female",
-      "ageGroup" : "age13-17",
-      "viewerPercentage" : 30
-    }, {
-      "gender" : "female",
-      "ageGroup" : "age18-24",
-      "viewerPercentage" : 15
-    }, {
-      "gender" : "female",
-      "ageGroup" : "age25-34",
-      "viewerPercentage" : 5
-    }],
-    "totalVideoViews" : 0,
-    "videoId" : "pJSAVo3EFa4",
-    "videoTitle" : "My Broadcast"
-  },
-  "3" : {
-    "videoDemographic" : [{
-      "gender" : "male",
-      "ageGroup" : "age13-17",
-      "viewerPercentage" : 25
-    }, {
-      "gender" : "male",
-      "ageGroup" : "age18-24",
-      "viewerPercentage" : 15
-    }, {
-      "gender" : "male",
-      "ageGroup" : "age25-34",
-      "viewerPercentage" : 10
-    },{
-      "gender" : "female",
-      "ageGroup" : "age13-17",
-      "viewerPercentage" : 30
-    }, {
-      "gender" : "female",
-      "ageGroup" : "age18-24",
-      "viewerPercentage" : 15
-    }, {
-      "gender" : "female",
-      "ageGroup" : "age25-34",
-      "viewerPercentage" : 5
-    }],
+    "videoDemographic" : [ {
+    "gender" : "male",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 15
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 5
+  },{
+    "gender" : "female",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 20
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 10
+  } ],
+    "thumbnail" : "https://i.ytimg.com/vi/KdEeNw2p1RU/mqdefault.jpg",
     "totalVideoViews" : 0,
     "videoId" : "S8mrj3o85Yk",
-    "videoTitle" : "My Broadcast"
+    "avgView" : [ {
+    "gender" : "male",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 15
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 5
+  },{
+    "gender" : "female",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 20
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 10
+  } ],
+    "videoTitle" : "Test 2"
   },
-  "4" : {
-    "videoDemographic" : [{
-      "gender" : "male",
-      "ageGroup" : "age13-17",
-      "viewerPercentage" : 25
-    }, {
-      "gender" : "male",
-      "ageGroup" : "age18-24",
-      "viewerPercentage" : 15
-    }, {
-      "gender" : "male",
-      "ageGroup" : "age25-34",
-      "viewerPercentage" : 10
-    },{
-      "gender" : "female",
-      "ageGroup" : "age13-17",
-      "viewerPercentage" : 30
-    }, {
-      "gender" : "female",
-      "ageGroup" : "age18-24",
-      "viewerPercentage" : 15
-    }, {
-      "gender" : "female",
-      "ageGroup" : "age25-34",
-      "viewerPercentage" : 5
-    }],
+  "3" : {
+    "videoDemographic" : [ {
+    "gender" : "male",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 15
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 5
+  },{
+    "gender" : "female",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 20
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 10
+  } ],
+    "thumbnail" : "https://i.ytimg.com/vi/KdEeNw2p1RU/mqdefault.jpg",
     "totalVideoViews" : 1,
     "videoId" : "KB-nyB9LGOw",
-    "videoTitle" : "EarlyLegendary #short"
+    "avgView" : [ {
+      "averageViewPercentage" : 102.83,
+      "avgViewDurationinSec" : 54
+    } ],
+    "videoTitle" : "Test 3"
   },
-  "5" : {
-    "videoDemographic" : [{
-      "gender" : "male",
-      "ageGroup" : "age13-17",
-      "viewerPercentage" : 25
-    }, {
-      "gender" : "male",
-      "ageGroup" : "age18-24",
-      "viewerPercentage" : 15
-    }, {
-      "gender" : "male",
-      "ageGroup" : "age25-34",
-      "viewerPercentage" : 10
-    },{
-      "gender" : "female",
-      "ageGroup" : "age13-17",
-      "viewerPercentage" : 30
-    }, {
-      "gender" : "female",
-      "ageGroup" : "age18-24",
-      "viewerPercentage" : 15
-    }, {
-      "gender" : "female",
-      "ageGroup" : "age25-34",
-      "viewerPercentage" : 5
-    }],
+  "4" : {
+    "videoDemographic" : [ {
+    "gender" : "male",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 15
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 5
+  },{
+    "gender" : "female",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 20
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 10
+  } ],
+    "thumbnail" : "https://i.ytimg.com/vi/KdEeNw2p1RU/mqdefault.jpg",
     "totalVideoViews" : 0,
     "videoId" : "XcX9UP0KqiI",
-    "videoTitle" : "test new settings"
+    "avgView" : [ {
+      "averageViewPercentage" : 102.83,
+      "avgViewDurationinSec" : 54
+    } ],
+    "videoTitle" : "Test 4"
   },
-  "DateTimeGathered" : "2024-04-22 15:54:32"
+  "5" : {
+    "videoDemographic" : [ {
+    "gender" : "male",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 15
+  }, {
+    "gender" : "male",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 5
+  },{
+    "gender" : "female",
+    "ageGroup" : "age13-17",
+    "viewerPercentage" : 20
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age18-24",
+    "viewerPercentage" : 25
+  }, {
+    "gender" : "female",
+    "ageGroup" : "age25-34",
+    "viewerPercentage" : 10
+  } ],
+    "thumbnail" : "https://i.ytimg.com/vi/KdEeNw2p1RU/mqdefault.jpg",
+    "totalVideoViews" : 0,
+    "videoId" : "KdEeNw2p1RU",
+    "avgView" : [ {
+      "averageViewPercentage" : 102.83,
+      "avgViewDurationinSec" : 54
+    } ],
+    "videoTitle" : "Test 5"
+  },
+  "DateTimeGathered" : "2024-05-15 20:38:40"
 }
