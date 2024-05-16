@@ -33,7 +33,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public String handleLogin() {
 
-        return "redirect:/";
+        return "facebook";
     }
 
     /**

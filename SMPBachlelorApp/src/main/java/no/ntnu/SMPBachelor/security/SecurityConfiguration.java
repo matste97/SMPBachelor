@@ -52,8 +52,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/upload").hasRole("ADMIN")
                 .requestMatchers("/authorize").hasRole("ADMIN")
@@ -77,8 +75,8 @@ public class SecurityConfiguration {
                 // /error is needed or else getting weird redirect on login, found solution here: https://github.com/spring-projects/spring-security/issues/12635#issuecomment-1429055478
                 .requestMatchers("/error").permitAll()
                 .and()
-                .formLogin().loginPage("/login")
-                .and().logout().logoutSuccessUrl("/");
+                .formLogin().loginPage("/login").defaultSuccessUrl("/facebook", true)
+                .and().logout().logoutSuccessUrl("/login");
         return http.build();
     }
 
