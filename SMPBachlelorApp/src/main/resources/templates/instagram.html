@@ -29,7 +29,7 @@
     <h1>Alder og kjønn av følgere</h1>
 
     <!-- Add a canvas element for the new chart -->
-<canvas id="ageAndGenderChart"></canvas>
+    <canvas id="ageAndGenderChart"></canvas>
 
 <script th:inline="javascript">
     var followersAgeAndGenderInsightsData = /*[[${followersAgeAndGenderInsights}]]*/ [];
@@ -37,16 +37,22 @@
     createAgeAndGenderChart(ageAndGenderData);
 </script>
 
-     <h1>Siste 10 media objekter</h1>
+     <h1>Nylige innlegg</h1>
     
     <div class="grid-container" th:if="${latestPosts != null and latestPosts.size() > 0}">
         <div class="grid-item" th:each="post : ${latestPosts}">
             <!-- Check if media is available -->
             <div th:if="${post.media_url != null}">
                 <!-- Display thumbnail -->
-                <img class="thumbnail" th:if="${post.media_type == 'IMAGE'}" th:src="${post.media_url}" th:alt="${post.caption} ? ${post.caption} : 'Missing thumbnail'"/> 
-                <img class="thumbnail" th:if="${post.media_type != 'IMAGE'}" img th:src="@{img/missingthumbnail.png}" alt="missing thumbnail">
-            </div>
+<img class="thumbnail" 
+th:if="${post.media_type == 'IMAGE'}" 
+th:src="${post.media_url}" 
+th:alt="${post.caption} ? ${post.caption} : 'Missing thumbnail'"/> 
+
+<img class="thumbnail" 
+th:if="${post.media_type != 'IMAGE'}" 
+th:src="${post.thumbnail_url}" 
+th:alt="${post.caption} ? ${post.caption} : 'Missing thumbnail'"/> 
 
             <!-- Display caption, comment- and like count, and timestamp -->
             <div class="caption" th:if="${post.caption != null}" th:text="${post.caption}"></div>

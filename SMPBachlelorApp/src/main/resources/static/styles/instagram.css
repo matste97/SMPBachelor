@@ -65,7 +65,7 @@ nav h3 {
 }
 
 .thumbnail {
-    width: 150px; 
+    width: 200px; 
     height: auto;
     display: block;
 }
@@ -74,20 +74,27 @@ nav h3 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 50px;
+    justify-content: center; 
+}
+
+@media screen and (min-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 .grid-item {
     display: flex;
     flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    text-align: center;
 }
 
 .media-text {
     width: 100%;
     height: auto;
-}
-
-.media-text {
-   font-size: 14px;
+    font-size: 14px;
 }
 
 .caption {

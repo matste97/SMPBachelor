@@ -40,7 +40,7 @@ public class InstagramAuth {
     public static JSONArray getLatestPosts(String accessToken, String userId, String username) throws IOException, ParseException {
         try {
             HttpUrl url = HttpUrl.parse(INSTAGRAM_API_BASE_URL + userId).newBuilder()
-                    .addQueryParameter("fields", "business_discovery.username(" + username + "){media.limit(10){id,media_type,media_url,caption,permalink,timestamp,comments_count,like_count}}")
+                    .addQueryParameter("fields", "business_discovery.username(" + username + "){media.limit(12){id,media_type,media_url,thumbnail_url,caption,permalink,timestamp,comments_count,like_count}}")
                     .addQueryParameter("access_token", accessToken)
                     .build();
     
@@ -78,6 +78,9 @@ public class InstagramAuth {
                 case "VIDEO":
                     displayVideoPost(post);
                     break;
+                case "REELS":
+                    displayVideoPost(post);
+                    break;
                 // Add cases for other media types if needed
                 default:
                     System.out.println("Unknown media type: " + mediaType);
@@ -100,12 +103,17 @@ public class InstagramAuth {
         String mediaUrl = (String) post.get("media_url");
         String caption = (String) post.get("caption");
         String timestamp = (String) post.get("timestamp");
+        String thumbnailUrl = (String) post.get("thumbnail_url"); 
     
-        System.out.println("Video URL: " + mediaUrl);
+        // Use the thumbnail URL if available, otherwise use the media URL
+        String displayUrl = thumbnailUrl != null ? thumbnailUrl : mediaUrl;
+    
+        System.out.println("Video URL: " + displayUrl);
         System.out.println("Caption: " + caption);
         System.out.println("Timestamp: " + timestamp);
         System.out.println();
     }
+    
 
     public static JSONArray getInsightsData(String accessToken, String userId, String metric, String period) throws IOException, ParseException {
         HttpUrl url = HttpUrl.parse(INSTAGRAM_API_BASE_URL + userId + "/insights").newBuilder()
@@ -129,6 +137,28 @@ public class InstagramAuth {
             return data;
         }
     }
+
+    public static JSONObject getReeslMetrics(String accessToken, String reelId) throws IOException, ParseException {
+        HttpUrl url = HttpUrl.parse(INSTAGRAM_API_BASE_URL + reelId + "/insights").newBuilder()
+                .addQueryParameter("metric", "clips_replays_count,comments,ig_reels_aggregated_all_plays_count,ig_reels_avg_watch_time,ig_reels_video_view_total_time,likes,plays,reach,saved,shares,total_interactions")
+                .addQueryParameter("access_token", accessToken)
+                .build();
+    
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+    
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected response code: " + response.code());
+            }
+            String responseBody = response.body().string();
+            JSONParser parser = new JSONParser();
+            JSONObject jsonResponse = (JSONObject) parser.parse(responseBody);
+            return jsonResponse;
+        }
+    }
+    
 public static JSONArray getFollowersAgeAndGenderInsights(String accessToken, String userId) throws IOException, ParseException {
         HttpUrl url = HttpUrl.parse(INSTAGRAM_API_BASE_URL + userId + "/insights").newBuilder()
                 .addQueryParameter("metric", "audience_gender_age")
@@ -151,5 +181,5 @@ public static JSONArray getFollowersAgeAndGenderInsights(String accessToken, Str
             return data;
         }
     }
-    
 }
+    
