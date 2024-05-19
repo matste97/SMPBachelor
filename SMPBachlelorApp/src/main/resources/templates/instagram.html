@@ -39,30 +39,22 @@
 
      <h1>Nylige innlegg</h1>
     
-    <div class="grid-container" th:if="${latestPosts != null and latestPosts.size() > 0}">
+     <div class="grid-container" th:if="${latestPosts != null and latestPosts.size() > 0}">
         <div class="grid-item" th:each="post : ${latestPosts}">
-            <!-- Check if media is available -->
-            <div th:if="${post.media_url != null}">
-                <!-- Display thumbnail -->
-<img class="thumbnail" 
-th:if="${post.media_type == 'IMAGE'}" 
-th:src="${post.media_url}" 
-th:alt="${post.caption} ? ${post.caption} : 'Missing thumbnail'"/> 
-
-<img class="thumbnail" 
-th:if="${post.media_type != 'IMAGE'}" 
-th:src="${post.thumbnail_url}" 
-th:alt="${post.caption} ? ${post.caption} : 'Missing thumbnail'"/> 
-
-            <!-- Display caption, comment- and like count, and timestamp -->
-            <div class="caption" th:if="${post.caption != null}" th:text="${post.caption}"></div>
-            <div class="media-text">
-                <div>Kommentarer: <span th:text="${post.comments_count}"></span></div>
-                <div>Likes: <span th:text="${post.like_count}"></span></div>
-                <div th:text="${post.formattedTimestamp}"></div>
+            <!-- Display thumbnail -->
+            <img class="thumbnail" th:if="${post.media_type == 'IMAGE'}" th:src="${post.media_url}" th:alt="${post.caption != null ? post.caption : 'Missing thumbnail'}"/> 
+            <img class="thumbnail" th:if="${post.media_type == 'VIDEO'}" th:src="${post.thumbnail_url}" th:alt="${post.caption != null ? post.caption : 'Missing thumbnail'}"/> 
+            <img class="thumbnail" th:if="${post.media_type == 'CAROUSEL_ALBUM'}" th:src="${post.media_url}" th:alt="${post.caption != null ? post.caption : 'Missing thumbnail'}"/> 
+                
+                <!-- Display caption, comment count, like count, and timestamp -->
+                <div class="caption" th:if="${post.caption != null}" th:text="${post.caption}"></div>
+                <div class="media-text">
+                    <div>Kommentarer: <span th:text="${post.comments_count}"></span></div>
+                    <div>Likes: <span th:text="${post.like_count}"></span></div>
+                    <div th:text="${post.formattedTimestamp}"></div>
+                </div>
             </div>
         </div>
-    </div>
     
     <!-- Display message if latest posts retrieval fails -->
     <div th:if="${latestPosts == null or latestPosts.size() == 0}">

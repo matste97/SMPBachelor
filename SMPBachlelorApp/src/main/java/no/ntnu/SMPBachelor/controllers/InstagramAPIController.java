@@ -51,6 +51,9 @@ public class InstagramAPIController {
             // Retrieve latest Instagram posts
             JSONArray latestPosts = InstagramAuth.getLatestPosts(accessToken, userId, username);
 
+            // Log the size of the latestPosts array
+        logger.info("Number of latest posts: {}", latestPosts.size());
+
             // Format timestamp before adding to the model
             for (Object obj : latestPosts) {
                 JSONObject post = (JSONObject) obj;

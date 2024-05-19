@@ -81,6 +81,8 @@ public class InstagramAuth {
                 case "REELS":
                     displayVideoPost(post);
                     break;
+                case "CAROUSEL_ALBUM":
+                    displayCarouselAlbum(post);
                 // Add cases for other media types if needed
                 default:
                     System.out.println("Unknown media type: " + mediaType);
@@ -113,6 +115,18 @@ public class InstagramAuth {
         System.out.println("Timestamp: " + timestamp);
         System.out.println();
     }
+
+    private static void displayCarouselAlbum(JSONObject post) {
+        String mediaUrl = (String) post.get("media_url");
+        String caption = (String) post.get("caption");
+        String timestamp = (String) post.get("timestamp");
+        
+        System.out.println("Video URL: " + mediaUrl);
+        System.out.println("Caption: " + caption);
+        System.out.println("Timestamp: " + timestamp);
+        System.out.println();
+    }
+    
     
 
     public static JSONArray getInsightsData(String accessToken, String userId, String metric, String period) throws IOException, ParseException {
@@ -138,7 +152,7 @@ public class InstagramAuth {
         }
     }
 
-    public static JSONObject getReeslMetrics(String accessToken, String reelId) throws IOException, ParseException {
+    public static JSONObject getReelsMetrics(String accessToken, String reelId) throws IOException, ParseException {
         HttpUrl url = HttpUrl.parse(INSTAGRAM_API_BASE_URL + reelId + "/insights").newBuilder()
                 .addQueryParameter("metric", "clips_replays_count,comments,ig_reels_aggregated_all_plays_count,ig_reels_avg_watch_time,ig_reels_video_view_total_time,likes,plays,reach,saved,shares,total_interactions")
                 .addQueryParameter("access_token", accessToken)
