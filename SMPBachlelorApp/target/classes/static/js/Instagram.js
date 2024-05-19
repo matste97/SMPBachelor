@@ -72,9 +72,9 @@ function createAgeAndGenderChart(data) {
 
     // Define colors for each gender
     const colors = {
-        'M': 'rgba(54, 162, 235, 0.2)', // Blue
-        'F': 'rgba(255, 99, 132, 0.2)', // Red
-        'U': 'rgba(255, 206, 86, 0.2)' // Yellow
+        'M': 'rgba(54, 162, 235, 0.5)', // Blue
+        'F': 'rgba(255, 99, 132, 0.5)', // Red
+        'U': 'rgba(57,161,53,0.5)' // Green
     };
 
     // Creating data for Chart.js
@@ -84,7 +84,7 @@ function createAgeAndGenderChart(data) {
             label: 'Alder og kjønn til følgere av Sunnmoersposten',
             data: counts,
             backgroundColor: ageGroups.map(label => colors[label.split('.')[0]]),
-            borderColor: ageGroups.map(label => colors[label.split('.')[0]].replace('0.2', '1')),
+            borderColor: 'rgba(0, 0, 0, 1)',
             borderWidth: 1
         }]
     };
