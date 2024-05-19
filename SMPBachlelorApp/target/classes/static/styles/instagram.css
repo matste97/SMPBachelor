@@ -113,3 +113,11 @@ nav h3 {
     position: relative;
     top: -1px;
 }
+
+.chart {
+    max-width: 900px;
+}
+
+canvas {
+    max-height: 500px;
+}

@@ -19,7 +19,7 @@
 
     <h1>Seere i dag</h1>
      <!-- Add a canvas element for the chart -->
-     <canvas id="insightsChart"></canvas>
+     <canvas id="insightsChart" class="chart"></canvas>
 
      <script th:inline="javascript">
          var insightsData = /*[[${insightsData}]]*/ [];
@@ -29,7 +29,7 @@
     <h1>Alder og kjønn av følgere</h1>
 
     <!-- Add a canvas element for the new chart -->
-    <canvas id="ageAndGenderChart"></canvas>
+    <canvas id="ageAndGenderChart" class="chart"></canvas>
 
 <script th:inline="javascript">
     var followersAgeAndGenderInsightsData = /*[[${followersAgeAndGenderInsights}]]*/ [];
